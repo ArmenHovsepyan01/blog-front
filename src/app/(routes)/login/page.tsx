@@ -11,7 +11,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import FormWrapper from "../../../components/form-wrapper/FormWrapper";
+import FormWrapper from "../../../_components/form-wrapper/FormWrapper";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../../lib/store/actions/user.actions";
+import Cookies from "js-cookie";
 
 const schema = yup
   .object({
@@ -36,6 +39,8 @@ const Login = () => {
     resolver: yupResolver(schema),
   });
 
+  const dispatch = useDispatch();
+
   const [customError, setCustomError] = useState<string>("");
 
   const router = useRouter();
@@ -45,7 +50,10 @@ const Login = () => {
       const url = `${process.env.NEXT_PUBLIC_API_URI}/login`;
       if (values.email && values.password) {
         const { data } = await axios.post(url, values);
-        console.log(data);
+
+        Cookies.set("token", data.data.access_token);
+        dispatch(setUser(data.data.user));
+
         if (customError) {
           setCustomError("");
         }

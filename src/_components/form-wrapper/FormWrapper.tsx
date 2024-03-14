@@ -24,7 +24,7 @@ const FormWrapper: FC<IFormWrapper> = ({ children, label }) => {
         color: "black",
       }}
     >
-      <h2>{label}</h2>
+      <h2 style={{ marginBottom: 20 }}>{label}</h2>
       {children}
     </Box>
   );

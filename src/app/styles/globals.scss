@@ -1,4 +1,15 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 main {
-  max-width: 500px;
-  margin: 120px auto;
+  max-width: 1000px;
+  margin: 60px auto;
+}
+
+a {
+  text-decoration: none;
+  color: black;
 }

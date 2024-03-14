@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 
-import FormWrapper from "../../../components/form-wrapper/FormWrapper";
+import FormWrapper from "../../../_components/form-wrapper/FormWrapper";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 
