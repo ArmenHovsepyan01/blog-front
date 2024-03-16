@@ -10,12 +10,14 @@ type BlogAction = {
 interface IInitialState {
   blogs: IBlog[];
   status: RequestStatus;
+  pagesCount: number | null;
   error?: null | any;
 }
 
 const initialState: IInitialState = {
   blogs: [],
   status: RequestStatus.IDLE,
+  pagesCount: null,
 };
 
 export default function blogReducer(state = initialState, action: BlogAction) {
@@ -24,6 +26,7 @@ export default function blogReducer(state = initialState, action: BlogAction) {
       return {
         ...state,
         blogs: action.payload.blogs,
+        pagesCount: action.payload.count,
         status: RequestStatus.SUCCESS,
       };
     case BlogActionsTypes.GET_BLOGS_REQUEST:

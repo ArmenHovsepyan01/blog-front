@@ -5,12 +5,14 @@ export interface IBlog {
   imageUrl: string;
   isPublished: boolean;
   userId: number;
-  user: {
-    firstName: string;
-    lastName: string;
-  };
+  user?: IBlogUser;
   createdAt: string;
   updatedAt: string;
+}
+
+interface IBlogUser {
+  firstName: string;
+  lastName: string;
 }
 
 export interface IUser {
@@ -18,4 +20,10 @@ export interface IUser {
   firstName: string;
   lastName: string;
   email: string;
+}
+
+export interface ILikedBlog {
+  id: number;
+  blog: IBlog;
+  user: IBlogUser;
 }

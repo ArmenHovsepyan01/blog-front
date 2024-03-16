@@ -92,9 +92,11 @@ const Avatar = () => {
           <Avatar /> {user.firstName ? user.firstName : "Guest"}
         </MenuItem>
         {user.id && (
-          <MenuItem onClick={handleClose}>
-            <Avatar /> My Blog
-          </MenuItem>
+          <Link href={"/liked-blogs"}>
+            <MenuItem onClick={handleClose}>
+              <Avatar /> Liked Blogs
+            </MenuItem>
+          </Link>
         )}
         <Divider />
 

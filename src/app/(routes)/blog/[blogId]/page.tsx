@@ -13,6 +13,7 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import Link from "next/link";
 import store from "../../../../lib/store/store";
 import ImageWithFallback from "../../../../_components/image-with-fallback/ImageWithFallback";
+import AddToFavorites from "../../../../_components/common/add-to-favorites/AddToFavorites";
 
 interface BlogProps {
   params: {
@@ -51,23 +52,13 @@ const Blog: FC<BlogProps> = async ({ params: { blogId } }) => {
         >
           <Box display={"flex"} gap={2} alignItems={"center"}>
             <Avatar />
-            <span>{`${blog.user.firstName} ${blog.user.lastName}`}</span>
+            <span>{`${blog?.user?.firstName} ${blog?.user?.lastName}`}</span>
             <span>{getDate(blog.createdAt)}</span>
           </Box>
-          <IconButton>
-            <Link href={!user ? "/login" : ""}>
-              <FavoriteIcon />
-            </Link>
-          </IconButton>
+          <AddToFavorites id={+blogId} />
         </Box>
 
         <Box sx={{ width: "100%", height: 500, position: "relative" }}>
-          {/*<Image*/}
-          {/*  src={`${process.env.NEXT_PUBLIC_API_URI}/api/images/${blog.imageUrl}`}*/}
-          {/*  alt={"Image"}*/}
-          {/*  layout={"fill"}*/}
-          {/*  objectFit={"cover"}*/}
-          {/*/>*/}
           <ImageWithFallback
             src={`${process.env.NEXT_PUBLIC_API_URI}/api/images/${blog.imageUrl}`}
             alt={"Image"}

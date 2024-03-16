@@ -1,23 +1,53 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect, useMemo, useState } from "react";
 
 import { useDispatch } from "react-redux";
 import { getBlogs } from "../lib/store/actions/blog.actions";
 import { useAppSelector } from "../lib/store/hoooks/hooks";
 
-import { Box } from "@mui/material";
+import { Box, Pagination } from "@mui/material";
 
 import { IBlog } from "../utilis/types/definitions";
 import BlogCard from "../_components/blog-card/BlogCard";
+import { getLikeBlogs } from "../lib/store/actions/likedBlogs.actions";
+import { RequestStatus } from "../utilis/types/enums";
+import Loading from "./loading";
 
 export default function Home() {
   const dispatch = useDispatch();
-  const { blogs, status } = useAppSelector((state) => state.blog);
+  const loading = useAppSelector((state) => state.blog.status);
+
+  const { blogs, status, pagesCount, error } = useAppSelector(
+    (state) => state.blog,
+  );
+
+  const userStatus = useAppSelector((state) => state.user.status);
+
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const limit = 2;
+
+  const pages = useMemo(() => {
+    return pagesCount / limit;
+  }, [pagesCount, limit]);
 
   useEffect(() => {
-    dispatch(getBlogs());
-  }, [dispatch]);
+    dispatch(getBlogs(currentPage));
+  }, [dispatch, currentPage]);
+
+  useEffect(() => {
+    if (userStatus === RequestStatus.SUCCESS) {
+      dispatch(getLikeBlogs());
+    }
+  }, [userStatus]);
+
+  const OnPageChange = (e: React.ChangeEvent<unknown>, page: number) => {
+    setCurrentPage(page);
+  };
+
+  // if (loading === RequestStatus.PENDING) {
+  //   return <Loading />;
+  // }
 
   return (
     <section>
@@ -26,6 +56,11 @@ export default function Home() {
           {blogs.map((blog: IBlog) => {
             return <BlogCard blog={blog} key={blog.id} />;
           })}
+          <Pagination
+            count={pages}
+            sx={{ margin: "auto" }}
+            onChange={OnPageChange}
+          />
         </Box>
       </main>
     </section>

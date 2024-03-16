@@ -16,6 +16,7 @@ import Link from "next/link";
 import { IBlog } from "../../utilis/types/definitions";
 import { getDate } from "../../utilis/getDate";
 import { showLessText } from "../../utilis/showLessText";
+import AddToFavorites from "../common/add-to-favorites/AddToFavorites";
 
 interface IBlogCard {
   blog: IBlog;
@@ -28,7 +29,7 @@ const BlogCard: FC<IBlogCard> = ({ blog }) => {
     "https://cloudinary-marketing-res.cloudinary.com/images/w_1000,c_scale/v1699909964/fallback_image_ad_1/fallback_image_ad_1-gif?_i=AA";
 
   return (
-    <Card sx={{ display: "flex" }}>
+    <Card sx={{ display: "flex", height: 250, width: "100%" }}>
       <CardMedia
         src={
           isFallback
@@ -42,21 +43,21 @@ const BlogCard: FC<IBlogCard> = ({ blog }) => {
         }}
         sx={{
           width: 400,
+          height: "100%",
         }}
       />
       <Box
         padding={2}
         display={"flex"}
         flexDirection={"column"}
-        gap={2}
         justifyContent={"space-between"}
-        sx={{ width: "100%" }}
+        sx={{ width: "100%", flex: 2 }}
       >
         <Box display={"flex"} alignItems={"center"} gap={1}>
           <Avatar src={""} />
 
           <span>
-            {blog.user.firstName} {blog.user.lastName}
+            {blog?.user?.firstName} {blog?.user?.lastName}
           </span>
           <span>{getDate(blog.createdAt)}</span>
         </Box>
@@ -65,9 +66,7 @@ const BlogCard: FC<IBlogCard> = ({ blog }) => {
           <p>{showLessText(blog.content)}</p>
         </Box>
         <CardActions sx={{ justifyContent: "end" }}>
-          <IconButton aria-label="add to favorites">
-            <FavoriteIcon />
-          </IconButton>
+          <AddToFavorites id={blog.id} />
           <Link href={`/blog/${blog.id}`}>
             <IconButton aria-label="add to favorites">
               <ReadMoreIcon />

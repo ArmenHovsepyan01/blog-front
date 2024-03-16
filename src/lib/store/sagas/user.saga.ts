@@ -13,8 +13,6 @@ import Cookies from "js-cookie";
 function* getUser() {
   try {
     const token = Cookies.get("token");
-    console.log(token);
-    // if (!token) yield put(setUserError());
 
     yield put(getUserRequest());
 

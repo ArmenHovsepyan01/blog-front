@@ -1,4 +1,4 @@
-import { put, call, takeEvery, fork } from "redux-saga/effects";
+import { put, call, takeEvery, fork, delay } from "redux-saga/effects";
 import axios from "axios";
 import {
   BlogActionsTypes,
@@ -7,13 +7,18 @@ import {
   setBlogsError,
 } from "../actions/blog.actions";
 
-function* getBlogs() {
+function* getBlogs(action: any) {
   try {
+    const { page } = action;
+
     yield put(getBlogsRequest());
 
-    const { data } = yield call(axios.get, "http://localhost:5000/blogs");
+    const { data } = yield call(
+      axios.get,
+      `http://localhost:5000/blogs?page=${page}&limit=2`,
+    );
 
-    yield put(setBlogs(data.blogs));
+    yield put(setBlogs(data.blogs, data.count));
   } catch (e) {
     yield put(setBlogsError());
   }

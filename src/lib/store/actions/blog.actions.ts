@@ -7,14 +7,16 @@ export enum BlogActionsTypes {
   SET_BLOGS_ERROR = "SET_BLOGS_ERROR",
 }
 
-export const getBlogs = () => ({
+export const getBlogs = (page: number) => ({
   type: BlogActionsTypes.GET_BLOGS,
+  page,
 });
 
-export const setBlogs = (blogs: IBlog[]) => ({
+export const setBlogs = (blogs: IBlog[], count: number) => ({
   type: BlogActionsTypes.SET_BLOGS,
   payload: {
     blogs,
+    count,
   },
 });
 
