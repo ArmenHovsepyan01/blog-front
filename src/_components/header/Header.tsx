@@ -6,7 +6,8 @@ import { Box, AppBar, Toolbar, Typography } from "@mui/material";
 
 import Avatar from "./avatar/Avatar";
 import Link from "next/link";
-import { getUser } from "../../lib/store/actions/user.actions";
+import { getUser } from "@/lib/store/actions/user.actions";
+
 import { useDispatch } from "react-redux";
 const Header = () => {
   const dispatch = useDispatch();

@@ -63,7 +63,7 @@ const BlogCard: FC<IBlogCard> = ({ blog }) => {
         </Box>
         <Box display={"flex"} gap={4} flexDirection={"column"}>
           <Typography variant={"h5"}>{blog.title}</Typography>
-          <p>{showLessText(blog.content)}</p>
+          <p style={{ lineBreak: "anywhere" }}>{showLessText(blog.content)}</p>
         </Box>
         <CardActions sx={{ justifyContent: "end" }}>
           <AddToFavorites id={blog.id} />

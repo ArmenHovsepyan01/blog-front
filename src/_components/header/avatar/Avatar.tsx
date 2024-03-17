@@ -37,6 +37,7 @@ const Avatar = () => {
 
   const onLogOut = () => {
     Cookies.remove("token");
+
     dispatch(logOut());
     handleClose();
   };
@@ -88,9 +89,12 @@ const Avatar = () => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={handleClose}>
-          <Avatar /> {user.firstName ? user.firstName : "Guest"}
-        </MenuItem>
+        <Link href={user.id ? "/my-blog" : ""}>
+          <MenuItem onClick={handleClose}>
+            <Avatar /> {user.firstName ? user.firstName : "Guest"}
+          </MenuItem>
+        </Link>
+
         {user.id && (
           <Link href={"/liked-blogs"}>
             <MenuItem onClick={handleClose}>

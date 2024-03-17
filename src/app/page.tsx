@@ -3,16 +3,15 @@
 import React, { Suspense, useEffect, useMemo, useState } from "react";
 
 import { useDispatch } from "react-redux";
-import { getBlogs } from "../lib/store/actions/blog.actions";
-import { useAppSelector } from "../lib/store/hoooks/hooks";
+import { getBlogs } from "@/lib/store/actions/blog.actions";
+import { useAppSelector } from "@/lib/store/hoooks/hooks";
 
 import { Box, Pagination } from "@mui/material";
-
-import { IBlog } from "../utilis/types/definitions";
-import BlogCard from "../_components/blog-card/BlogCard";
-import { getLikeBlogs } from "../lib/store/actions/likedBlogs.actions";
-import { RequestStatus } from "../utilis/types/enums";
-import Loading from "./loading";
+import { getLikeBlogs } from "@/lib/store/actions/likedBlogs.actions";
+import { RequestStatus } from "@/utilis/types/enums";
+import { IBlog } from "@/utilis/types/definitions";
+import BlogCard from "@/_components/blog-card/BlogCard";
+import Loading from "@/app/loading";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -28,12 +27,18 @@ export default function Home() {
   const limit = 2;
 
   const pages = useMemo(() => {
-    return pagesCount / limit;
+    return Math.round(pagesCount / limit);
   }, [pagesCount, limit]);
 
   useEffect(() => {
     dispatch(getBlogs(currentPage));
   }, [dispatch, currentPage]);
+
+  // const memoizedGetBlogs = useMemo(() => {
+  //   dispatch(getBlogs(currentPage));
+  //
+  //   return (page = currentPage) => dispatch(getBlogs(page));
+  // }, [dispatch]);
 
   useEffect(() => {
     if (userStatus === RequestStatus.SUCCESS) {
@@ -45,17 +50,19 @@ export default function Home() {
     setCurrentPage(page);
   };
 
-  // if (loading === RequestStatus.PENDING) {
-  //   return <Loading />;
-  // }
-
   return (
     <section>
       <main>
         <Box gap={4} padding={4} display={"flex"} flexDirection={"column"}>
-          {blogs.map((blog: IBlog) => {
-            return <BlogCard blog={blog} key={blog.id} />;
-          })}
+          {loading === RequestStatus.SUCCESS ? (
+            <>
+              {blogs.map((blog: IBlog) => {
+                return <BlogCard blog={blog} key={blog.id} />;
+              })}
+            </>
+          ) : (
+            <Loading />
+          )}
           <Pagination
             count={pages}
             sx={{ margin: "auto" }}

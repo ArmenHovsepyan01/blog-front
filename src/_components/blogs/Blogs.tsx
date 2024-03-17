@@ -24,8 +24,9 @@ const Blogs = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const limit = 2;
 
+  console.log(pagesCount)
   const pages = useMemo(() => {
-    return pagesCount / limit;
+    return (pagesCount / limit);
   }, [pagesCount, limit]);
 
   useEffect(() => {
@@ -49,11 +50,11 @@ const Blogs = () => {
       {blogs.map((blog: IBlog) => {
         return <BlogCard blog={blog} key={blog.id} />;
       })}
-      <Pagination
-        count={pages}
-        sx={{ margin: "auto" }}
-        onChange={OnPageChange}
-      />
+      {/*<Pagination*/}
+      {/*  count={Math.round(pages)}*/}
+      {/*  sx={{ margin: "auto" }}*/}
+      {/*  onChange={OnPageChange}*/}
+      {/*/>*/}
     </Box>
   );
 };

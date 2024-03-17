@@ -29,6 +29,11 @@ export default function blogReducer(state = initialState, action: BlogAction) {
         pagesCount: action.payload.count,
         status: RequestStatus.SUCCESS,
       };
+    case BlogActionsTypes.ADD_BLOG:
+      return {
+        ...state,
+        blogs: [...state.blogs, action.payload.blog],
+      };
     case BlogActionsTypes.GET_BLOGS_REQUEST:
       return {
         ...state,

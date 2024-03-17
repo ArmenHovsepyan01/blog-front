@@ -5,6 +5,7 @@ export enum BlogActionsTypes {
   SET_BLOGS = "SET_BLOGS",
   GET_BLOGS_REQUEST = "GET_BLOGS_REQUEST",
   SET_BLOGS_ERROR = "SET_BLOGS_ERROR",
+  ADD_BLOG = "ADD_BLOG",
 }
 
 export const getBlogs = (page: number) => ({
@@ -26,4 +27,11 @@ export const getBlogsRequest = () => ({
 
 export const setBlogsError = () => ({
   type: BlogActionsTypes.SET_BLOGS_ERROR,
+});
+
+export const addBlog = (blog: IBlog) => ({
+  type: BlogActionsTypes.ADD_BLOG,
+  payload: {
+    blog,
+  },
 });

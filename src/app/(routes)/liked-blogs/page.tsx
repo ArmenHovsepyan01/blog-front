@@ -1,17 +1,20 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { useAppSelector } from "../../../lib/store/hoooks/hooks";
+import { useAppSelector } from "@/lib/store/hoooks/hooks";
 import { Box, Divider, Pagination, Typography } from "@mui/material";
 import BlogCard from "../../../_components/blog-card/BlogCard";
-import { ILikedBlog } from "../../../utilis/types/definitions";
-import { RequestStatus } from "../../../utilis/types/enums";
-import { getLikeBlogs } from "../../../lib/store/actions/likedBlogs.actions";
+import { ILikedBlog } from "@/utilis/types/definitions";
+import { RequestStatus } from "@/utilis/types/enums";
+import { getLikeBlogs } from "@/lib/store/actions/likedBlogs.actions";
 import { useDispatch } from "react-redux";
+import loading from "@/app/loading";
+import Loading from "@/app/loading";
 
 const LikedBlogs = () => {
   const likedBlogs = useAppSelector((state) => state.likedBlogs.likedBlogs);
   const userStatus = useAppSelector((state) => state.user.status);
+  const likedBlogsStatus = useAppSelector((state) => state.likedBlogs.status);
 
   const dispatch = useDispatch();
 
@@ -33,9 +36,19 @@ const LikedBlogs = () => {
         flexDirection={"column"}
         gap={2}
       >
-        {likedBlogs.map((item: ILikedBlog) => {
-          return <BlogCard blog={item.blog} key={item.id} />;
-        })}
+        {likedBlogsStatus === RequestStatus.SUCCESS ? (
+          <>
+            {likedBlogs.length > 0 ? (
+              likedBlogs.map((item: ILikedBlog) => {
+                return <BlogCard blog={item.blog} key={item.id} />;
+              })
+            ) : (
+              <span>You don't like any blog yet.</span>
+            )}
+          </>
+        ) : (
+          <Loading />
+        )}
       </Box>
     </main>
   );

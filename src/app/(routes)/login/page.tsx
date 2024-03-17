@@ -13,7 +13,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import FormWrapper from "../../../_components/form-wrapper/FormWrapper";
 import { useDispatch } from "react-redux";
-import { setUser } from "../../../lib/store/actions/user.actions";
+import { setUser } from "@/lib/store/actions/user.actions";
 import Cookies from "js-cookie";
 
 const schema = yup
