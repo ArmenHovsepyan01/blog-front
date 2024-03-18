@@ -10,6 +10,7 @@ type UserActions = {
 interface IInitialState {
   user: IUser | {};
   status: RequestStatus;
+  error?: any;
 }
 
 const initialState: IInitialState = {

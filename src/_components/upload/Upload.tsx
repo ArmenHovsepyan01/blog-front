@@ -1,18 +1,14 @@
 "use client";
 
-import React, { FC, useState } from "react";
+import React, { FC, useRef, useState } from "react";
+
 import style from "./Upload.module.scss";
+
 import { Box, Button, TextField } from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
 import { ControllerRenderProps } from "react-hook-form";
-import {
-  Cancel,
-  CancelOutlined,
-  Delete,
-  UploadFile,
-  UploadFileRounded,
-  UploadRounded,
-} from "@mui/icons-material";
+import { Cancel, UploadFile } from "@mui/icons-material";
+
 import Image from "next/image";
 
 interface IUpload {
@@ -22,6 +18,7 @@ interface IUpload {
     "image"
   >;
   image: File;
+  imageUrl?: string;
 }
 
 function fileToBlob(file: File): Promise<string | ArrayBuffer | null> {
@@ -35,8 +32,11 @@ function fileToBlob(file: File): Promise<string | ArrayBuffer | null> {
   });
 }
 
-const Upload: FC<IUpload> = ({ setImage, field }) => {
-  const [src, setSrc] = useState<string>("");
+const Upload: FC<IUpload> = ({ setImage, field, imageUrl }) => {
+  const [src, setSrc] = useState<string>(
+    imageUrl ? `http://localhost:5000/api/images/${imageUrl}` : "",
+  );
+  const divRef = useRef(null);
 
   const resetImage = () => {
     setImage(null);
@@ -46,8 +46,9 @@ const Upload: FC<IUpload> = ({ setImage, field }) => {
   return (
     <Box display={"flex"} gap={1} flexDirection={"column"}>
       <div
+        ref={divRef}
         style={{
-          width: 400,
+          width: "100%",
           height: 400,
           position: "relative",
           display: "flex",
@@ -62,18 +63,16 @@ const Upload: FC<IUpload> = ({ setImage, field }) => {
         onDragEnter={(e) => {
           e.preventDefault();
           // @ts-ignore
-          e.target.style.borderColor = "black";
-          // Add visual feedback when dragging over the container
+          divRef.current.style.backgroundColor = "#dedede";
         }}
         onDragLeave={(e) => {
           e.preventDefault();
           // @ts-ignore
-          e.target.style.backgroundColor = "gray";
-
-          // Reset visual feedback when leaving the container
+          divRef.current.style.backgroundColor = "transparent";
         }}
         onDrop={async (e) => {
           e.preventDefault();
+
           const droppedFiles = e.dataTransfer.files;
           if (droppedFiles && droppedFiles.length > 0) {
             field.onChange(droppedFiles[0]);

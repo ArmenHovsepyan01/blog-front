@@ -1,17 +1,20 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { FC, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { Box, Button, TextField } from "@mui/material";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Textarea from "@mui/joy/Textarea";
 
-import axios from "axios";
-import { createConfigForRequest } from "@/utilis/createConfigForRequest";
 import Upload from "@/_components/upload/Upload";
 import { useDispatch } from "react-redux";
-import { addBlog } from "@/lib/store/actions/blog.actions";
+import {
+  addBlogToUserBlogs,
+  updateUserBlog,
+} from "../../lib/store/actions/userBlogs.action";
+import { useAppSelector } from "../../lib/store/hoooks/hooks";
+import { IBlog } from "../../utilis/types/definitions";
 
 const schema = yup
   .object({
@@ -23,7 +26,22 @@ const schema = yup
 
 type FormData = yup.InferType<typeof schema>;
 
-const CreateBlog = () => {
+interface ICreateBlog {
+  id?: number;
+  closeModal?: () => void;
+  handleCategoryChange?: (id: number) => void;
+}
+
+const CreateBlog: FC<ICreateBlog> = ({
+  handleCategoryChange,
+  id,
+  closeModal,
+}) => {
+  const userBlogs = useAppSelector((state) => state.userBlogs.blogs);
+  const blog = userBlogs.find((item: IBlog) => item.id === id);
+
+  console.log(blog);
+
   const {
     control,
     handleSubmit,
@@ -31,9 +49,9 @@ const CreateBlog = () => {
     setError,
   } = useForm<FormData>({
     defaultValues: {
-      title: "",
-      content: "",
-      image: "",
+      title: blog ? blog.title : "",
+      content: blog ? blog.content : "",
+      image: blog ? blog.imageUrl : "",
     },
     resolver: yupResolver(schema),
   });
@@ -43,7 +61,6 @@ const CreateBlog = () => {
 
   const onSubmit: SubmitHandler<FormData> = async (values) => {
     try {
-      const url = `${process.env.NEXT_PUBLIC_API_URI}/blog`;
       const formData = new FormData();
       for (const key in values) {
         if (key === "image") {
@@ -56,10 +73,16 @@ const CreateBlog = () => {
         }
       }
 
-      const config = createConfigForRequest();
-      const { data } = await axios.post(url, formData, config);
+      if (id && closeModal) {
+        dispatch(updateUserBlog(id, formData));
+        closeModal();
+      } else {
+        dispatch(addBlogToUserBlogs(formData));
+      }
 
-      dispatch(addBlog(data.blog));
+      if (handleCategoryChange) {
+        handleCategoryChange(1);
+      }
     } catch (e: any) {
       console.error("Error submitting form:", e);
     }
@@ -68,7 +91,13 @@ const CreateBlog = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      style={{ border: "solid 1px gray", borderRadius: "8px", padding: 12 }}
+      style={{
+        border: "solid 1px gray",
+        borderRadius: "8px",
+        padding: 12,
+        minWidth: 800,
+        backgroundColor: "white",
+      }}
     >
       <Box display={"flex"} gap={2} flexDirection={"column"}>
         <Controller
@@ -86,7 +115,7 @@ const CreateBlog = () => {
               {...field}
               id={"content"}
               name="content"
-              placeholder="Type in here…"
+              placeholder="Type your story…"
               variant="outlined"
               minRows={3}
             />
@@ -96,12 +125,28 @@ const CreateBlog = () => {
           name={"image"}
           control={control}
           render={({ field }) => (
-            <Upload setImage={setImage} field={field} image={image} />
+            <Upload
+              setImage={setImage}
+              field={field}
+              image={image}
+              imageUrl={id && blog.imageUrl ? `${blog.imageUrl}` : ""}
+            />
           )}
         />
-        <Button type={"submit"} variant={"contained"}>
-          Create
-        </Button>
+        <Box display={"flex"} justifyContent={"space-between"}>
+          <Button type={"submit"} variant={"contained"}>
+            {id ? "Update" : "Create"}
+          </Button>
+          {closeModal && (
+            <Button
+              variant={"contained"}
+              sx={{ backgroundColor: "red" }}
+              onClick={closeModal}
+            >
+              Cancel
+            </Button>
+          )}
+        </Box>
       </Box>
     </form>
   );

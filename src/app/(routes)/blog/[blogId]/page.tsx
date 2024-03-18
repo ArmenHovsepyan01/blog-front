@@ -15,6 +15,7 @@ import store from "../../../../lib/store/store";
 import ImageWithFallback from "../../../../_components/image-with-fallback/ImageWithFallback";
 import AddToFavorites from "../../../../_components/common/add-to-favorites/AddToFavorites";
 import Loading from "./loading";
+import {calculateReadingTime} from "../../../../utilis/calculateReadingTime";
 
 interface BlogProps {
   params: {
@@ -58,6 +59,7 @@ const Blog: FC<BlogProps> = async ({ params: { blogId } }) => {
               <Avatar />
               <span>{`${blog?.user?.firstName} ${blog?.user?.lastName}`}</span>
               <span>{getDate(blog.createdAt)}</span>
+              <span>{calculateReadingTime(blog.content)} min read</span>
             </Box>
             <AddToFavorites id={+blogId} />
           </Box>

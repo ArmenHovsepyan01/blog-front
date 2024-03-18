@@ -8,10 +8,13 @@ export default async function middleware(request: NextRequest) {
   if (pathname === "/liked-blogs" && !isLoggedIn) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
+  if (pathname === "/my-blog" && !isLoggedIn) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/liked-blogs"],
+  matcher: ["/liked-blogs", "/my-blog"],
 };

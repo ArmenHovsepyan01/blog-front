@@ -15,6 +15,7 @@ import {
 
 import InventoryIcon from "@mui/icons-material/Inventory";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
+import { absolutePathToPage } from "next/dist/shared/lib/page-path/absolute-path-to-page";
 
 interface ISidebar {
   handleCategoryChange: (category: number) => void;
@@ -23,7 +24,8 @@ interface ISidebar {
 
 const Sidebar: FC<ISidebar> = ({ handleCategoryChange, selectedCategory }) => {
   const drawerWidth = 240;
-  const sidebarItems = ["Drafts", "Create"];
+
+  const sidebarItems = ["Published", "Unpublished", "Create"];
 
   return (
     <Drawer
@@ -34,8 +36,9 @@ const Sidebar: FC<ISidebar> = ({ handleCategoryChange, selectedCategory }) => {
 
         [`& .MuiDrawer-paper`]: {
           boxSizing: "border-box",
-          top: 64,
           width: drawerWidth,
+          position: "absolute",
+          height: "calc(100vh - 65px)",
         },
       }}
     >
@@ -56,7 +59,7 @@ const Sidebar: FC<ISidebar> = ({ handleCategoryChange, selectedCategory }) => {
                 >
                   <ListItemButton>
                     <ListItemIcon>
-                      {i === 0 ? (
+                      {i === 0 || i === 1 ? (
                         <InventoryIcon />
                       ) : (
                         <DriveFileRenameOutlineIcon />

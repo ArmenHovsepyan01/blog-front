@@ -17,6 +17,9 @@ import { IBlog } from "../../utilis/types/definitions";
 import { getDate } from "../../utilis/getDate";
 import { showLessText } from "../../utilis/showLessText";
 import AddToFavorites from "../common/add-to-favorites/AddToFavorites";
+import { calculateReadingTime } from "../../utilis/calculateReadingTime";
+import Settings from "./settings/Settings";
+import { usePathname } from "next/navigation";
 
 interface IBlogCard {
   blog: IBlog;
@@ -24,6 +27,7 @@ interface IBlogCard {
 
 const BlogCard: FC<IBlogCard> = ({ blog }) => {
   const [isFallback, setIsFallback] = useState<boolean>(false);
+  const pathname = usePathname();
 
   const fallbackImageSrc =
     "https://cloudinary-marketing-res.cloudinary.com/images/w_1000,c_scale/v1699909964/fallback_image_ad_1/fallback_image_ad_1-gif?_i=AA";
@@ -60,18 +64,26 @@ const BlogCard: FC<IBlogCard> = ({ blog }) => {
             {blog?.user?.firstName} {blog?.user?.lastName}
           </span>
           <span>{getDate(blog.createdAt)}</span>
+          <span>{calculateReadingTime(blog.content)} min read</span>
         </Box>
         <Box display={"flex"} gap={4} flexDirection={"column"}>
           <Typography variant={"h5"}>{blog.title}</Typography>
           <p style={{ lineBreak: "anywhere" }}>{showLessText(blog.content)}</p>
         </Box>
         <CardActions sx={{ justifyContent: "end" }}>
-          <AddToFavorites id={blog.id} />
-          <Link href={`/blog/${blog.id}`}>
-            <IconButton aria-label="add to favorites">
-              <ReadMoreIcon />
-            </IconButton>
-          </Link>
+          {pathname === "/my-blog" && (
+            <Settings isPublished={blog.isPublished} id={blog.id} />
+          )}
+          {blog.isPublished && (
+            <>
+              <AddToFavorites id={blog.id} />
+              <Link href={`/blog/${blog.id}`}>
+                <IconButton aria-label="add to favorites">
+                  <ReadMoreIcon />
+                </IconButton>
+              </Link>
+            </>
+          )}
         </CardActions>
       </Box>
     </Card>

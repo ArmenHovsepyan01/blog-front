@@ -15,6 +15,7 @@ import {
   Button,
   Divider,
   ListItemIcon,
+  Box,
 } from "@mui/material";
 
 import Link from "next/link";
@@ -23,7 +24,7 @@ import { useAppSelector } from "../../../lib/store/hoooks/hooks";
 import { useDispatch } from "react-redux";
 import Cookies from "js-cookie";
 import { getUser, logOut } from "../../../lib/store/actions/user.actions";
-
+import PersonIcon from "@mui/icons-material/Person";
 const Avatar = () => {
   const user = useAppSelector((state) => state.user.user);
   const dispatch = useDispatch();
@@ -91,33 +92,38 @@ const Avatar = () => {
       >
         <Link href={user.id ? "/my-blog" : ""}>
           <MenuItem onClick={handleClose}>
-            <Avatar /> {user.firstName ? user.firstName : "Guest"}
+            <Box display={"flex"} gap={1} alignItems={"center"}>
+              <PersonIcon /> {user.firstName ? user.firstName : "Guest"}
+            </Box>
           </MenuItem>
         </Link>
 
         {user.id && (
           <Link href={"/liked-blogs"}>
-            <MenuItem onClick={handleClose}>
-              <Avatar /> Liked Blogs
-            </MenuItem>
+            <MenuItem onClick={handleClose}>Liked Blogs</MenuItem>
           </Link>
         )}
+
         <Divider />
 
         {user.id ? (
           <MenuItem onClick={onLogOut}>
-            <ListItemIcon>
-              <Logout fontSize="small" />
-            </ListItemIcon>
-            Logout
+            <Box display={"flex"} alignItems={"center"}>
+              <ListItemIcon>
+                <Logout fontSize="small" />
+              </ListItemIcon>
+              Logout
+            </Box>
           </MenuItem>
         ) : (
           <MenuItem onClick={handleClose}>
             <Link href={"/login"}>
-              <ListItemIcon>
-                <Login fontSize="small" />
-              </ListItemIcon>
-              Log in
+              <Box display={"flex"} alignItems={"center"}>
+                <ListItemIcon>
+                  <Login fontSize="small" />
+                </ListItemIcon>
+                Log in
+              </Box>
             </Link>
           </MenuItem>
         )}

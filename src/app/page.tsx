@@ -34,12 +34,6 @@ export default function Home() {
     dispatch(getBlogs(currentPage));
   }, [dispatch, currentPage]);
 
-  // const memoizedGetBlogs = useMemo(() => {
-  //   dispatch(getBlogs(currentPage));
-  //
-  //   return (page = currentPage) => dispatch(getBlogs(page));
-  // }, [dispatch]);
-
   useEffect(() => {
     if (userStatus === RequestStatus.SUCCESS) {
       dispatch(getLikeBlogs());
