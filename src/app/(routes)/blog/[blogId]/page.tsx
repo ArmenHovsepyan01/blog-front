@@ -15,7 +15,7 @@ import store from "../../../../lib/store/store";
 import ImageWithFallback from "../../../../_components/image-with-fallback/ImageWithFallback";
 import AddToFavorites from "../../../../_components/common/add-to-favorites/AddToFavorites";
 import Loading from "./loading";
-import {calculateReadingTime} from "../../../../utilis/calculateReadingTime";
+import { calculateReadingTime } from "../../../../utilis/calculateReadingTime";
 
 interface BlogProps {
   params: {
@@ -37,8 +37,6 @@ async function getBlog(id: string) {
 
 const Blog: FC<BlogProps> = async ({ params: { blogId } }) => {
   const blog: IBlog = await getBlog(blogId);
-
-  const user = store.getState().user.user.id;
 
   return (
     <main>
@@ -72,7 +70,7 @@ const Blog: FC<BlogProps> = async ({ params: { blogId } }) => {
           </Box>
           <Box display={"flex"} gap={4} flexDirection={"column"}>
             <Typography variant={"h4"}>{blog.title}</Typography>
-            <p>{blog.content}</p>
+            <p style={{ lineHeight: 1.5 }}>{blog.content}</p>
           </Box>
           <Box display={"flex"} gap={2} sx={{ borderTop: 1, borderBottom: 1 }}>
             <IconButton>

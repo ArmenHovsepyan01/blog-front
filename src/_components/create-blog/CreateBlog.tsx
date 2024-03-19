@@ -15,6 +15,7 @@ import {
 } from "../../lib/store/actions/userBlogs.action";
 import { useAppSelector } from "../../lib/store/hoooks/hooks";
 import { IBlog } from "../../utilis/types/definitions";
+import { useRouter } from "next/navigation";
 
 const schema = yup
   .object({
@@ -27,20 +28,12 @@ const schema = yup
 type FormData = yup.InferType<typeof schema>;
 
 interface ICreateBlog {
-  id?: number;
-  closeModal?: () => void;
+  blog?: IBlog;
   handleCategoryChange?: (id: number) => void;
 }
 
-const CreateBlog: FC<ICreateBlog> = ({
-  handleCategoryChange,
-  id,
-  closeModal,
-}) => {
-  const userBlogs = useAppSelector((state) => state.userBlogs.blogs);
-  const blog = userBlogs.find((item: IBlog) => item.id === id);
-
-  console.log(blog);
+const CreateBlog: FC<ICreateBlog> = ({ blog, handleCategoryChange }) => {
+  const router = useRouter();
 
   const {
     control,
@@ -73,9 +66,9 @@ const CreateBlog: FC<ICreateBlog> = ({
         }
       }
 
-      if (id && closeModal) {
-        dispatch(updateUserBlog(id, formData));
-        closeModal();
+      if (blog) {
+        dispatch(updateUserBlog(blog.id, formData));
+        router.replace("/my-blog");
       } else {
         dispatch(addBlogToUserBlogs(formData));
       }
@@ -129,23 +122,14 @@ const CreateBlog: FC<ICreateBlog> = ({
               setImage={setImage}
               field={field}
               image={image}
-              imageUrl={id && blog.imageUrl ? `${blog.imageUrl}` : ""}
+              imageUrl={blog?.id && blog?.imageUrl ? `${blog?.imageUrl}` : ""}
             />
           )}
         />
         <Box display={"flex"} justifyContent={"space-between"}>
           <Button type={"submit"} variant={"contained"}>
-            {id ? "Update" : "Create"}
+            {blog?.id ? "Update" : "Create"}
           </Button>
-          {closeModal && (
-            <Button
-              variant={"contained"}
-              sx={{ backgroundColor: "red" }}
-              onClick={closeModal}
-            >
-              Cancel
-            </Button>
-          )}
         </Box>
       </Box>
     </form>

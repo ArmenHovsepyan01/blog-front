@@ -1,12 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { AlertTitle, Box, Button, TextField } from "@mui/material";
+import { AlertTitle, Alert, Box, Button, TextField } from "@mui/material";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import axios from "axios";
+import Snackbar from "@mui/material/Snackbar";
+import Notification from "../../../_components/notification/Notification";
 
 const schema = yup
   .object({
@@ -17,6 +19,8 @@ const schema = yup
 type FormData = yup.InferType<typeof schema>;
 
 const Page = () => {
+  const [message, setMessage] = useState<string>("");
+
   const {
     control,
     handleSubmit,
@@ -36,6 +40,8 @@ const Page = () => {
         values,
       );
       console.log(data);
+
+      setMessage(data.message);
     } catch (e: any) {
       console.error(e.response.data.error.message);
       setError(
@@ -46,6 +52,10 @@ const Page = () => {
     }
   };
 
+  const handleClose = () => {
+    setMessage("");
+  };
+
   return (
     <main>
       <form
@@ -53,6 +63,11 @@ const Page = () => {
         onSubmit={handleSubmit(onSubmit)}
       >
         <Box display={"flex"} gap={2} flexDirection={"column"}>
+          <Notification
+            message={message}
+            isOpen={!!message}
+            handleClose={handleClose}
+          />
           <Controller
             name={"email"}
             control={control}

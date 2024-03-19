@@ -12,8 +12,7 @@ import {
   updateUserBlog,
 } from "../../../lib/store/actions/userBlogs.action";
 
-import styles from "./Settings.module.scss";
-import CreateBlog from "../../create-blog/CreateBlog";
+import Link from "next/link";
 interface ISettings {
   id: number;
   isPublished: boolean;
@@ -61,23 +60,13 @@ const Settings: FC<ISettings> = ({ isPublished, id }) => {
         )}
 
         <Tooltip title={"Edit blog"}>
-          <IconButton onClick={openModal}>
-            <Edit />
-          </IconButton>
+          <Link href={`/my-blog/${id}/edit`}>
+            <IconButton onClick={openModal}>
+              <Edit />
+            </IconButton>
+          </Link>
         </Tooltip>
       </Box>
-
-      {isOpen && (
-        <Box
-          className={styles.editModal}
-          style={{ margin: 0 }}
-          display={"flex"}
-          alignItems={"center"}
-          justifyContent={"center"}
-        >
-          <CreateBlog closeModal={closeModal} id={id} />
-        </Box>
-      )}
     </>
   );
 };

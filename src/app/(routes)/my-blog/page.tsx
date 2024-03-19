@@ -69,10 +69,23 @@ const Page = () => {
           {category === 2 ? (
             <CreateBlog handleCategoryChange={handleCategoryChange} />
           ) : (
-            <Box display={"flex"} gap={2} flexDirection={"column"}>
-              {blogs.map((blog: IBlog) => {
-                return <BlogCard blog={blog} key={blog.id} />;
-              })}
+            <Box
+              display={"flex"}
+              gap={2}
+              flexDirection={"column"}
+              sx={{ width: "1000px" }}
+            >
+              {blogs.length > 0 ? (
+                blogs.map((blog: IBlog) => {
+                  return <BlogCard blog={blog} key={blog.id} />;
+                })
+              ) : (
+                <span style={{ margin: "auto" }}>
+                  {category === 0
+                    ? "There is no published blogs."
+                    : "There is no unpublished blogs."}{" "}
+                </span>
+              )}
             </Box>
           )}
         </Box>

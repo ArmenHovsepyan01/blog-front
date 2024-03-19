@@ -9,6 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { createConfigForRequest } from "../../../utilis/createConfigForRequest";
 import { useRouter, useSearchParams } from "next/navigation";
+import Notification from "../../../_components/notification/Notification";
 
 const schema = yup
   .object({
@@ -27,6 +28,7 @@ const Page = () => {
   const searchParams = useSearchParams();
   const code = searchParams.get("code");
   const [customError, setCustomError] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
 
   const {
     control,
@@ -53,11 +55,18 @@ const Page = () => {
         body,
         config,
       );
+
+      setMessage(data.message);
       console.log(data);
     } catch (e: any) {
       console.error(e.response.data.error.message);
       setCustomError(e.response.data.error.message);
     }
+  };
+
+  const handleClose = () => {
+    setMessage("");
+    router.replace("/my-blog");
   };
 
   return (
@@ -67,6 +76,13 @@ const Page = () => {
         onSubmit={handleSubmit(onSubmit)}
       >
         <Box display={"flex"} gap={2} flexDirection={"column"}>
+          {message && (
+            <Notification
+              message={message}
+              isOpen={!!message}
+              handleClose={handleClose}
+            />
+          )}
           <Controller
             name={"newPassword"}
             control={control}

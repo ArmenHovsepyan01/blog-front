@@ -1,18 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import {
-  AccountCircle,
-  Logout,
-  PersonAdd,
-  Settings,
-  Login,
-} from "@mui/icons-material";
+import React, { useState } from "react";
+import { AccountCircle, Logout, Login } from "@mui/icons-material";
 import {
   IconButton,
   Menu,
   MenuItem,
-  Button,
   Divider,
   ListItemIcon,
   Box,
@@ -23,9 +16,13 @@ import Link from "next/link";
 import { useAppSelector } from "../../../lib/store/hoooks/hooks";
 import { useDispatch } from "react-redux";
 import Cookies from "js-cookie";
-import { getUser, logOut } from "../../../lib/store/actions/user.actions";
+import { logOut } from "../../../lib/store/actions/user.actions";
 import PersonIcon from "@mui/icons-material/Person";
+import { useRouter } from "next/navigation";
+
 const Avatar = () => {
+  const router = useRouter();
+
   const user = useAppSelector((state) => state.user.user);
   const dispatch = useDispatch();
 
@@ -41,6 +38,7 @@ const Avatar = () => {
 
     dispatch(logOut());
     handleClose();
+    router.replace("/");
   };
 
   return (
@@ -101,6 +99,12 @@ const Avatar = () => {
         {user.id && (
           <Link href={"/liked-blogs"}>
             <MenuItem onClick={handleClose}>Liked Blogs</MenuItem>
+          </Link>
+        )}
+
+        {user.id && (
+          <Link href={"/reset-password"}>
+            <MenuItem onClick={handleClose}>Change password</MenuItem>
           </Link>
         )}
 

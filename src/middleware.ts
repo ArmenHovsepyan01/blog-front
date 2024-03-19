@@ -5,16 +5,24 @@ export default async function middleware(request: NextRequest) {
 
   const { pathname, searchParams } = request.nextUrl;
 
-  if (pathname === "/liked-blogs" && !isLoggedIn) {
+  if (
+    (pathname === "/my-blog" ||
+      pathname === "/reset-password" ||
+      pathname === "/change-password" ||
+      pathname === "/liked-blogs") &&
+    !isLoggedIn
+  ) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
-  if (pathname === "/my-blog" && !isLoggedIn) {
-    return NextResponse.redirect(new URL("/login", request.url));
+
+  if (pathname === "/change-password") {
+    const code = new URLSearchParams(searchParams).get("code");
+    if (!code) return NextResponse.redirect(new URL("/", request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/liked-blogs", "/my-blog"],
+  matcher: ["/liked-blogs", "/my-blog", "/reset-password", "/change-password"],
 };
