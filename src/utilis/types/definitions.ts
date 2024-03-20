@@ -20,10 +20,18 @@ export interface IUser {
   firstName: string;
   lastName: string;
   email: string;
+  userFollowed: Follower[];
+  userFollowers: Follower[];
 }
 
 export interface ILikedBlog {
   id: number;
   blog: IBlog;
   user: IBlogUser;
+}
+
+export interface Follower {
+  id: number;
+  firstName: string;
+  lastName: string;
 }

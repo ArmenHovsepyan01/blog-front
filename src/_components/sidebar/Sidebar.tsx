@@ -14,8 +14,12 @@ import {
 } from "@mui/material";
 
 import InventoryIcon from "@mui/icons-material/Inventory";
+
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
-import { absolutePathToPage } from "next/dist/shared/lib/page-path/absolute-path-to-page";
+import { useAppSelector } from "../../lib/store/hoooks/hooks";
+import FollowersList from "../user-drawer/followers-list/FollowersList";
+import { Box } from "@mui/system";
+import { AccountCircle } from "@mui/icons-material";
 
 interface ISidebar {
   handleCategoryChange: (category: number) => void;
@@ -23,7 +27,10 @@ interface ISidebar {
 }
 
 const Sidebar: FC<ISidebar> = ({ handleCategoryChange, selectedCategory }) => {
-  const drawerWidth = 240;
+  const user = useAppSelector((state) => state.user.user);
+  const status = useAppSelector((state) => state.user.status);
+
+  const drawerWidth = 340;
 
   const sidebarItems = ["Published", "Unpublished", "Create"];
 
@@ -42,8 +49,31 @@ const Sidebar: FC<ISidebar> = ({ handleCategoryChange, selectedCategory }) => {
         },
       }}
     >
-      <Toolbar sx={{ width: "100%" }}>
+      <Toolbar sx={{ width: "100%", padding: "24px 0" }}>
         <Typography variant="h6" noWrap component="div" width={"100%"}>
+          <Box display={"flex"} alignItems={"center"} gap={2}>
+            <AccountCircle fontSize={"large"} />
+            <span>
+              {user?.firstName} {user?.lastName}
+            </span>
+          </Box>
+          <Box
+            display={"flex"}
+            gap={3}
+            flexDirection={"column"}
+            sx={{ margin: "16px 0", fontSize: "18px" }}
+          >
+            <FollowersList
+              followers={user?.userFollowers}
+              userName={user?.firstName}
+              title={"Followers"}
+            />
+            <FollowersList
+              followers={user?.userFollowed}
+              userName={user?.firstName}
+              title={"Following"}
+            />
+          </Box>
           <List>
             {sidebarItems.map((item, i) => {
               return (
@@ -71,6 +101,7 @@ const Sidebar: FC<ISidebar> = ({ handleCategoryChange, selectedCategory }) => {
               );
             })}
           </List>
+          {/*<FollowersList followers={} userName={} title={}*/}
         </Typography>
       </Toolbar>
     </Drawer>

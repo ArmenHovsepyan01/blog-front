@@ -9,6 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import Snackbar from "@mui/material/Snackbar";
 import Notification from "../../../_components/notification/Notification";
+import FormWrapper from "../../../_components/form-wrapper/FormWrapper";
 
 const schema = yup
   .object({
@@ -58,37 +59,43 @@ const Page = () => {
 
   return (
     <main>
-      <form
-        style={{ width: 400, margin: "auto" }}
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <Box display={"flex"} gap={2} flexDirection={"column"}>
-          <Notification
-            message={message}
-            isOpen={!!message}
-            handleClose={handleClose}
-          />
-          <Controller
-            name={"email"}
-            control={control}
-            render={({ field }) => {
-              return (
-                <TextField
-                  {...field}
-                  id={"email"}
-                  label={"Email"}
-                  placeholder={"example@gmail.com"}
-                  helperText={errors.email?.message}
-                  error={!!errors.email?.message}
-                />
-              );
-            }}
-          />
-          <Button type={"submit"} variant={"contained"}>
-            Submit
-          </Button>
-        </Box>
-      </form>
+      <FormWrapper label={"Reset Password"}>
+        <form
+          style={{ width: 400, margin: "auto" }}
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <Box display={"flex"} gap={2} flexDirection={"column"}>
+            <Notification
+              message={message}
+              isOpen={!!message}
+              handleClose={handleClose}
+            />
+            <Controller
+              name={"email"}
+              control={control}
+              render={({ field }) => {
+                return (
+                  <TextField
+                    {...field}
+                    id={"email"}
+                    label={"Email"}
+                    placeholder={"example@gmail.com"}
+                    helperText={errors.email?.message}
+                    error={!!errors.email?.message}
+                  />
+                );
+              }}
+            />
+            <Button
+              type={"submit"}
+              variant={"contained"}
+              sx={{ textTransform: "capitalize" }}
+            >
+              Confirm reset
+            </Button>
+          </Box>
+        </form>
+      </FormWrapper>
     </main>
   );
 };

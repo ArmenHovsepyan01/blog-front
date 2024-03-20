@@ -2,15 +2,25 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 
+import { useDispatch } from "react-redux";
+
 import { Box, Divider, Typography } from "@mui/material";
 
 import Sidebar from "@/_components/sidebar/Sidebar";
+
 import CreateBlog from "@/_components/create-blog/CreateBlog";
-import { useDispatch } from "react-redux";
-import { getUserBlogs } from "../../../lib/store/actions/userBlogs.action";
-import { useAppSelector } from "../../../lib/store/hoooks/hooks";
-import { IBlog } from "../../../utilis/types/definitions";
+
 import BlogCard from "../../../_components/blog-card/BlogCard";
+
+import { getUserBlogs } from "../../../lib/store/actions/userBlogs.action";
+
+import { useAppSelector } from "../../../lib/store/hoooks/hooks";
+
+import { IBlog } from "../../../utilis/types/definitions";
+
+import { RequestStatus } from "../../../utilis/types/enums";
+
+import Loading from "@/app/loading";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -20,7 +30,7 @@ const Page = () => {
 
   const [category, setCategory] = useState<number>(0);
 
-  const drawerWidth = 240;
+  const drawerWidth = 340;
 
   useEffect(() => {
     dispatch(getUserBlogs());
@@ -75,16 +85,20 @@ const Page = () => {
               flexDirection={"column"}
               sx={{ width: "1000px" }}
             >
-              {blogs.length > 0 ? (
-                blogs.map((blog: IBlog) => {
-                  return <BlogCard blog={blog} key={blog.id} />;
-                })
+              {status === RequestStatus.SUCCESS ? (
+                blogs.length > 0 ? (
+                  blogs.map((blog: IBlog) => {
+                    return <BlogCard blog={blog} key={blog.id} />;
+                  })
+                ) : (
+                  <span style={{ margin: "auto" }}>
+                    {category === 0
+                      ? "There is no published blogs."
+                      : "There is no unpublished blogs."}{" "}
+                  </span>
+                )
               ) : (
-                <span style={{ margin: "auto" }}>
-                  {category === 0
-                    ? "There is no published blogs."
-                    : "There is no unpublished blogs."}{" "}
-                </span>
+                <Loading />
               )}
             </Box>
           )}

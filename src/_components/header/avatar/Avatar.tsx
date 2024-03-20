@@ -19,6 +19,7 @@ import Cookies from "js-cookie";
 import { logOut } from "../../../lib/store/actions/user.actions";
 import PersonIcon from "@mui/icons-material/Person";
 import { useRouter } from "next/navigation";
+import { setLikedBlogs } from "../../../lib/store/actions/likedBlogs.actions";
 
 const Avatar = () => {
   const router = useRouter();
@@ -35,8 +36,10 @@ const Avatar = () => {
 
   const onLogOut = () => {
     Cookies.remove("token");
+    Cookies.remove("id");
 
     dispatch(logOut());
+    dispatch(setLikedBlogs([]));
     handleClose();
     router.replace("/");
   };

@@ -1,15 +1,23 @@
 "use client";
 
 import React, { useState } from "react";
+
+import { useRouter, useSearchParams } from "next/navigation";
+
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { AlertTitle, Box, Button, TextField } from "@mui/material";
+
+import { Box, Button, TextField } from "@mui/material";
 import * as yup from "yup";
+
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import axios from "axios";
+
 import { createConfigForRequest } from "../../../utilis/createConfigForRequest";
-import { useRouter, useSearchParams } from "next/navigation";
+
 import Notification from "../../../_components/notification/Notification";
+
+import FormWrapper from "@/_components/form-wrapper/FormWrapper";
 
 const schema = yup
   .object({
@@ -34,7 +42,6 @@ const Page = () => {
     control,
     handleSubmit,
     formState: { errors },
-    setError,
   } = useForm<FormData>({
     defaultValues: {
       newPassword: "",
@@ -57,7 +64,6 @@ const Page = () => {
       );
 
       setMessage(data.message);
-      console.log(data);
     } catch (e: any) {
       console.error(e.response.data.error.message);
       setCustomError(e.response.data.error.message);
@@ -71,56 +77,62 @@ const Page = () => {
 
   return (
     <main>
-      <form
-        style={{ width: 400, margin: "auto" }}
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <Box display={"flex"} gap={2} flexDirection={"column"}>
-          {message && (
-            <Notification
-              message={message}
-              isOpen={!!message}
-              handleClose={handleClose}
+      <FormWrapper label={"Change Password"}>
+        <form
+          style={{ width: 400, margin: "auto" }}
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <Box display={"flex"} gap={2} flexDirection={"column"}>
+            {message && (
+              <Notification
+                message={message}
+                isOpen={!!message}
+                handleClose={handleClose}
+              />
+            )}
+            <Controller
+              name={"newPassword"}
+              control={control}
+              render={({ field }) => {
+                return (
+                  <TextField
+                    {...field}
+                    id={"newPassword"}
+                    label={"New Password"}
+                    type={"password"}
+                    helperText={errors.newPassword?.message}
+                    error={!!errors.newPassword?.message}
+                  />
+                );
+              }}
             />
-          )}
-          <Controller
-            name={"newPassword"}
-            control={control}
-            render={({ field }) => {
-              return (
-                <TextField
-                  {...field}
-                  id={"newPassword"}
-                  label={"New Password"}
-                  type={"password"}
-                  helperText={errors.newPassword?.message}
-                  error={!!errors.newPassword?.message}
-                />
-              );
-            }}
-          />
-          <Controller
-            name={"confirmNewPassword"}
-            control={control}
-            render={({ field }) => {
-              return (
-                <TextField
-                  {...field}
-                  id={"confirmNewPassword"}
-                  label={"Confirm New Password"}
-                  type={"password"}
-                  helperText={errors.confirmNewPassword?.message}
-                  error={!!errors.confirmNewPassword?.message}
-                />
-              );
-            }}
-          />
-          {customError && <span style={{ color: "red" }}>{customError}</span>}
-          <Button type={"submit"} variant={"contained"}>
-            change password
-          </Button>
-        </Box>
-      </form>
+            <Controller
+              name={"confirmNewPassword"}
+              control={control}
+              render={({ field }) => {
+                return (
+                  <TextField
+                    {...field}
+                    id={"confirmNewPassword"}
+                    label={"Confirm New Password"}
+                    type={"password"}
+                    helperText={errors.confirmNewPassword?.message}
+                    error={!!errors.confirmNewPassword?.message}
+                  />
+                );
+              }}
+            />
+            {customError && <span style={{ color: "red" }}>{customError}</span>}
+            <Button
+              type={"submit"}
+              variant={"contained"}
+              sx={{ textTransform: "capitalize" }}
+            >
+              change password
+            </Button>
+          </Box>
+        </form>
+      </FormWrapper>
     </main>
   );
 };

@@ -1,3 +1,5 @@
+"use client";
+
 import React, { FC, useState } from "react";
 import {
   Box,
@@ -9,7 +11,6 @@ import {
   IconButton,
 } from "@mui/material";
 
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import ReadMoreIcon from "@mui/icons-material/ReadMore";
 import Link from "next/link";
 
@@ -58,11 +59,13 @@ const BlogCard: FC<IBlogCard> = ({ blog }) => {
         sx={{ width: "100%", flex: 2 }}
       >
         <Box display={"flex"} alignItems={"center"} gap={1}>
-          <Avatar src={""} />
+          <Avatar />
 
-          <span>
-            {blog?.user?.firstName} {blog?.user?.lastName}
-          </span>
+          <Link href={`/user/${blog.userId}`}>
+            <span>
+              {blog?.user?.firstName} {blog?.user?.lastName}
+            </span>
+          </Link>
           <span>{getDate(blog.createdAt)}</span>
           <span>{calculateReadingTime(blog.content)} min read</span>
         </Box>

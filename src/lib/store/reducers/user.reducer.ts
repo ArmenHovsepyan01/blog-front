@@ -1,5 +1,5 @@
 import { UserActionsTypes } from "../actions/user.actions";
-import { IUser } from "../../../utilis/types/definitions";
+import { Follower, IUser } from "../../../utilis/types/definitions";
 import { RequestStatus } from "../../../utilis/types/enums";
 
 type UserActions = {
@@ -8,7 +8,7 @@ type UserActions = {
 };
 
 interface IInitialState {
-  user: IUser | {};
+  user?: IUser | {};
   status: RequestStatus;
   error?: any;
 }
@@ -40,6 +40,31 @@ export default function userReducer(state = initialState, action: UserActions) {
       return {
         ...state,
         status: RequestStatus.ERROR,
+      };
+    case UserActionsTypes.FOLLOW:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          userFollowed: [
+            // @ts-ignore
+            ...state.user.userFollowed,
+            action.payload.follower,
+          ],
+        },
+      };
+    case UserActionsTypes.UNFOLLOW:
+      // @ts-ignore
+      const userFollowed = state?.user?.userFollowed.filter(
+        (item: Follower) => item.id !== action.payload.id,
+      );
+
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          userFollowed,
+        },
       };
     default:
       return state;

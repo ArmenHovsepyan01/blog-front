@@ -2,18 +2,24 @@
 
 import React, { useState } from "react";
 
-import { Button, Link, TextField } from "@mui/material";
+import { Button, Link, TextField, Box } from "@mui/material";
 
-import Box from "@mui/system/Box";
+import { useRouter } from "next/navigation";
+
+import { useDispatch } from "react-redux";
 
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
+
 import { yupResolver } from "@hookform/resolvers/yup";
+
 import * as yup from "yup";
+
 import axios from "axios";
-import { useRouter } from "next/navigation";
+
 import FormWrapper from "../../../_components/form-wrapper/FormWrapper";
-import { useDispatch } from "react-redux";
+
 import { setUser } from "@/lib/store/actions/user.actions";
+
 import Cookies from "js-cookie";
 
 const schema = yup
@@ -52,15 +58,19 @@ const Login = () => {
         const { data } = await axios.post(url, values);
 
         Cookies.set("token", data.data.access_token);
+        Cookies.set("id", data.data.user.id);
+
         dispatch(setUser(data.data.user));
 
         if (customError) {
           setCustomError("");
         }
+
         router.replace("/");
       }
     } catch (e: any) {
       const errorMessage = e.response.data.error.message;
+
       if (errorMessage.toLowerCase().includes("password")) {
         return setError(
           "password",
@@ -78,7 +88,6 @@ const Login = () => {
       }
 
       setCustomError(errorMessage);
-      console.error(e);
     }
   };
 

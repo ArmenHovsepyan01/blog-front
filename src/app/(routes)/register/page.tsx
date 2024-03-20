@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 
+import { useRouter } from "next/navigation";
+
 import FormWrapper from "../../../_components/form-wrapper/FormWrapper";
 
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -11,9 +13,10 @@ import * as yup from "yup";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
 import { TextField, Button, Link } from "@mui/material";
+
 import { Box } from "@mui/system";
+
 import axios from "axios";
-import { useRouter } from "next/navigation";
 
 const schema = yup
   .object({
@@ -40,7 +43,6 @@ const Register = () => {
   const {
     control,
     formState: { errors, defaultValues },
-    setError,
     handleSubmit,
   } = useForm<FormData>({
     defaultValues: {
@@ -66,9 +68,6 @@ const Register = () => {
       }
     } catch (e: any) {
       const errorMessage = e?.response?.data?.error?.message;
-      // if (errorMessage.toLowerCase().includes("email")) {
-      //   return setError("email", { type: "custom", message: errorMessage });
-      // }
       setCustomError(errorMessage);
       console.error(e);
     }
