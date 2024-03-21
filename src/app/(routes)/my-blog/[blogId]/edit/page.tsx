@@ -17,7 +17,7 @@ const Edit: FC<IEdit> = async ({ params: { blogId } }) => {
     `${process.env.NEXT_PUBLIC_API_URI}/blog/${blogId}`,
     createConfigForRequest(),
   );
-  console.log(data);
+  console.log(data, "data");
   return (
     <main>
       <Box display={"flex"} gap={2} flexDirection={"column"}>

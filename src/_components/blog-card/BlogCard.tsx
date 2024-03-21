@@ -21,6 +21,7 @@ import AddToFavorites from "../common/add-to-favorites/AddToFavorites";
 import { calculateReadingTime } from "../../utilis/calculateReadingTime";
 import Settings from "./settings/Settings";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 interface IBlogCard {
   blog: IBlog;
@@ -33,24 +34,38 @@ const BlogCard: FC<IBlogCard> = ({ blog }) => {
   const fallbackImageSrc =
     "https://cloudinary-marketing-res.cloudinary.com/images/w_1000,c_scale/v1699909964/fallback_image_ad_1/fallback_image_ad_1-gif?_i=AA";
 
+  const generateLinkTitle = (title?: string) => {
+    if (!title) return "";
+    return `@${title.toLowerCase().split(" ").join("-")}`;
+  };
+
   return (
     <Card sx={{ display: "flex", height: 250, width: "100%" }}>
-      <CardMedia
-        src={
-          isFallback
-            ? fallbackImageSrc
-            : `http://localhost:5000/api/images/${blog.imageUrl}`
-        }
-        component={"img"}
-        alt={"blog image"}
-        onError={() => {
-          setIsFallback(true);
-        }}
-        sx={{
-          width: 400,
-          height: "100%",
-        }}
-      />
+      <Link href={`/blog/${generateLinkTitle(blog.title)}/${blog.id}`}>
+        <CardMedia
+          component={"div"}
+          sx={{
+            width: 400,
+            height: "100%",
+            position: "relative",
+          }}
+        >
+          <Image
+            src={
+              isFallback
+                ? fallbackImageSrc
+                : `http://localhost:5000/api/images/${blog.imageUrl}`
+            }
+            alt={"blog image"}
+            onError={() => {
+              setIsFallback(true);
+            }}
+            fill
+            sizes="(max-width: 700px) 400px"
+            loading={"lazy"}
+          />
+        </CardMedia>
+      </Link>
       <Box
         padding={2}
         display={"flex"}
@@ -61,7 +76,9 @@ const BlogCard: FC<IBlogCard> = ({ blog }) => {
         <Box display={"flex"} alignItems={"center"} gap={1}>
           <Avatar />
 
-          <Link href={`/user/${blog.userId}`}>
+          <Link
+            href={`/user/${generateLinkTitle(blog?.user?.firstName)}/${blog.userId}`}
+          >
             <span>
               {blog?.user?.firstName} {blog?.user?.lastName}
             </span>
@@ -69,10 +86,15 @@ const BlogCard: FC<IBlogCard> = ({ blog }) => {
           <span>{getDate(blog.createdAt)}</span>
           <span>{calculateReadingTime(blog.content)} min read</span>
         </Box>
-        <Box display={"flex"} gap={4} flexDirection={"column"}>
-          <Typography variant={"h5"}>{blog.title}</Typography>
-          <p style={{ lineBreak: "anywhere" }}>{showLessText(blog.content)}</p>
-        </Box>
+
+        <Link href={`/blog/${generateLinkTitle(blog.title)}/${blog.id}`}>
+          <Box display={"flex"} gap={4} flexDirection={"column"}>
+            <Typography variant={"h5"}>{blog.title}</Typography>
+            <p style={{ lineBreak: "anywhere" }}>
+              {showLessText(blog.content)}
+            </p>
+          </Box>
+        </Link>
         <CardActions sx={{ justifyContent: "end" }}>
           {pathname === "/my-blog" && (
             <Settings isPublished={blog.isPublished} id={blog.id} />
@@ -80,7 +102,7 @@ const BlogCard: FC<IBlogCard> = ({ blog }) => {
           {blog.isPublished && (
             <>
               <AddToFavorites id={blog.id} />
-              <Link href={`/blog/${blog.id}`}>
+              <Link href={`/blog/${generateLinkTitle(blog.title)}/${blog.id}`}>
                 <IconButton aria-label="add to favorites">
                   <ReadMoreIcon />
                 </IconButton>

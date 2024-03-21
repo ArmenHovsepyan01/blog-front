@@ -2,20 +2,20 @@
 
 import React, { FC, Suspense } from "react";
 import axios from "axios";
-import { IBlog } from "../../../../utilis/types/definitions";
+import { IBlog } from "../../../../../utilis/types/definitions";
 import { Box, Avatar, Typography, IconButton } from "@mui/material";
-import { getDate } from "../../../../utilis/getDate";
+import { getDate } from "../../../../../utilis/getDate";
 import Image from "next/image";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import Link from "next/link";
-import store from "../../../../lib/store/store";
-import ImageWithFallback from "../../../../_components/image-with-fallback/ImageWithFallback";
-import AddToFavorites from "../../../../_components/common/add-to-favorites/AddToFavorites";
+import store from "../../../../../lib/store/store";
+import ImageWithFallback from "../../../../../_components/image-with-fallback/ImageWithFallback";
+import AddToFavorites from "../../../../../_components/common/add-to-favorites/AddToFavorites";
 import Loading from "./loading";
-import { calculateReadingTime } from "../../../../utilis/calculateReadingTime";
+import { calculateReadingTime } from "../../../../../utilis/calculateReadingTime";
 
 interface BlogProps {
   params: {

@@ -28,7 +28,7 @@ const FollowersList: FC<IFollowersList> = ({ followers, userName, title }) => {
             return <FollowerInfo follower={follower} key={follower.id} />;
           })
         ) : (
-          <span>{userName} currently has no followers.</span>
+          <span>{title} list is empty.</span>
         )}
       </Box>
     </Box>

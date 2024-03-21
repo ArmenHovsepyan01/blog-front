@@ -30,7 +30,7 @@ const Sidebar: FC<ISidebar> = ({ handleCategoryChange, selectedCategory }) => {
   const user = useAppSelector((state) => state.user.user);
   const status = useAppSelector((state) => state.user.status);
 
-  const drawerWidth = 340;
+  const drawerWidth = 380;
 
   const sidebarItems = ["Published", "Unpublished", "Create"];
 
@@ -101,7 +101,6 @@ const Sidebar: FC<ISidebar> = ({ handleCategoryChange, selectedCategory }) => {
               );
             })}
           </List>
-          {/*<FollowersList followers={} userName={} title={}*/}
         </Typography>
       </Toolbar>
     </Drawer>

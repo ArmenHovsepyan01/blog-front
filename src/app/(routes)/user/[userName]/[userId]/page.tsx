@@ -1,22 +1,20 @@
 "use client";
 
-import React, { FC, memo, useEffect } from "react";
+import React, { FC, memo } from "react";
 
 import { Box, Divider, Typography } from "@mui/material";
 
-import { useAppSelector } from "../../../../lib/store/hoooks/hooks";
+import UserDrawer from "../../../../../_components/user-drawer/UserDrawer";
 
-import { useDispatch } from "react-redux";
+import BlogCard from "../../../../../_components/blog-card/BlogCard";
 
-import { getPublisher } from "../../../../lib/store/actions/publisher.actions";
+import { IBlog } from "../../../../../utilis/types/definitions";
 
-import { RequestStatus } from "../../../../utilis/types/enums";
+import Loading from "./loading";
 
-import UserDrawer from "../../../../_components/user-drawer/UserDrawer";
+import useSWR from "swr";
 
-import BlogCard from "../../../../_components/blog-card/BlogCard";
-
-import { IBlog } from "../../../../utilis/types/definitions";
+import { getPublisherInfo } from "../../../../../utilis/publisher-helpers/getPublisher";
 
 interface IUser {
   params: {
@@ -25,13 +23,11 @@ interface IUser {
 }
 
 const User: FC<IUser> = ({ params: { userId } }) => {
-  const dispatch = useDispatch();
-  const user = useAppSelector((state) => state.publisher.publisher);
-  const status = useAppSelector((state) => state.publisher.status);
+  const { data, error, isLoading } = useSWR("/api", () =>
+    getPublisherInfo(+userId),
+  );
 
-  useEffect(() => {
-    dispatch(getPublisher(+userId));
-  }, []);
+  const user = data?.data;
 
   return (
     <Box
@@ -42,11 +38,11 @@ const User: FC<IUser> = ({ params: { userId } }) => {
         position: "relative",
       }}
     >
-      {status === RequestStatus.SUCCESS ? (
+      {!isLoading ? (
         <>
-          <UserDrawer />
+          <UserDrawer user={user} isLoading={isLoading} />
           <Box
-            sx={{ marginRight: `320px` }}
+            sx={{ marginRight: `380px` }}
             display={"flex"}
             gap={2}
             flexDirection={"column"}
@@ -60,7 +56,7 @@ const User: FC<IUser> = ({ params: { userId } }) => {
               display={"flex"}
               gap={2}
               flexDirection={"column"}
-              sx={{ padding: "18px 0" }}
+              sx={{ padding: "18px 0", paddingRight: "18px" }}
             >
               {user?.blogs?.length > 0 ? (
                 user?.blogs?.map((blog: IBlog) => {
@@ -68,6 +64,7 @@ const User: FC<IUser> = ({ params: { userId } }) => {
                     firstName: user.firstName,
                     lastName: user.lastName,
                   };
+
                   return <BlogCard blog={blog} key={blog.id} />;
                 })
               ) : (
@@ -77,14 +74,7 @@ const User: FC<IUser> = ({ params: { userId } }) => {
           </Box>
         </>
       ) : (
-        <Box
-          display={"flex"}
-          alignItems={"center"}
-          justifyContent={"center"}
-          sx={{ margin: "120px 0" }}
-        >
-          User not found.
-        </Box>
+        <Loading />
       )}
     </Box>
   );

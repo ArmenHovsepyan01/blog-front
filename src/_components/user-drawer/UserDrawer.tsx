@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { FC, useEffect, useState } from "react";
 
 import { Box, Drawer, Typography } from "@mui/material";
 
@@ -13,15 +13,53 @@ import { useAppSelector } from "../../lib/store/hoooks/hooks";
 import FollowButton from "../follow-button/FollowButton";
 import FollowersList from "./followers-list/FollowersList";
 
-const UserDrawer = () => {
-  const user = useAppSelector((state) => state.publisher.publisher);
-  const status = useAppSelector((state) => state.publisher.status);
-  const drawerWidth = 320;
+interface IUserDrawer {
+  user: any;
+  isLoading: boolean;
+}
+
+const UserDrawer: FC<IUserDrawer> = ({ user, isLoading }) => {
+  const [publisher, setPublisher] = useState(user);
+  const currentUser = useAppSelector((state) => state.user.user);
+
+  useEffect(() => {
+    setPublisher(user);
+  }, [user]);
+
+  const drawerWidth = 380;
 
   const userInfo = {
     id: user.id,
     firstName: user.firstName,
     lastName: user.lastName,
+  };
+
+  const addFollower = () => {
+    const follower = {
+      id: currentUser.id,
+      firstName: currentUser.firstName,
+      lastName: currentUser.lastName,
+    };
+
+    setPublisher((prev: any) => {
+      return {
+        ...prev,
+        userFollowers: [...prev.userFollowers, follower],
+      };
+    });
+  };
+
+  const removeFollower = () => {
+    setPublisher((prev: any) => {
+      return {
+        ...prev,
+        userFollowers: [
+          ...prev.userFollowers.filter(
+            (follower: any) => follower.id !== currentUser.id,
+          ),
+        ],
+      };
+    });
   };
 
   return (
@@ -47,25 +85,29 @@ const UserDrawer = () => {
           sx={{ width: "65px", height: "65px" }}
         />
         <Typography variant={"h5"}>
-          {user.firstName} {user.lastName}
+          {publisher.firstName} {publisher.lastName}
         </Typography>
         <span>
-          {user?.userFollowers?.length}{" "}
-          {user?.userFollowers?.length > 1 ? "Followers" : "Follower"}
+          {publisher?.userFollowers?.length}{" "}
+          {publisher?.userFollowers?.length > 1 ? "Followers" : "Follower"}
         </span>
-        {status === RequestStatus.SUCCESS && (
-          <FollowButton publisher={userInfo} />
+        {!isLoading && currentUser.id !== user.id && (
+          <FollowButton
+            publisher={userInfo}
+            addFollower={addFollower}
+            removeFollower={removeFollower}
+          />
         )}
 
         <FollowersList
-          followers={user?.userFollowers}
-          userName={user.firstName}
+          followers={publisher?.userFollowers}
+          userName={publisher.firstName}
           title={"Followers"}
         />
 
         <FollowersList
-          followers={user?.userFollowed}
-          userName={user.firstName}
+          followers={publisher?.userFollowed}
+          userName={publisher.firstName}
           title={"Followings"}
         />
       </Box>

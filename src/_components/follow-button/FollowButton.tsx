@@ -6,24 +6,30 @@ import { useAppSelector } from "../../lib/store/hoooks/hooks";
 import axios from "axios";
 import { createConfigForRequest } from "../../utilis/createConfigForRequest";
 import { useDispatch } from "react-redux";
-import { follow, unfollow } from "../../lib/store/actions/user.actions";
 import { Follower } from "../../utilis/types/definitions";
-import {
-  addFollower,
-  removeFollower,
-} from "../../lib/store/actions/publisher.actions";
+
+import { follow, unfollow } from "../../lib/store/actions/user.actions";
+
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 interface IFollowButton {
   publisher: Follower;
   size?: number;
+  addFollower?: () => void;
+  removeFollower?: () => void;
 }
 
-const FollowButton: FC<IFollowButton> = ({ publisher, size }) => {
+const FollowButton: FC<IFollowButton> = ({
+  publisher,
+  size,
+  addFollower,
+  removeFollower,
+}) => {
   const dispatch = useDispatch();
   const [isFollower, setIsFollower] = useState<boolean>(false);
   const user = useAppSelector((state) => state.user.user);
-  const status = useAppSelector((state) => state.user.status);
+  const authorId = Cookies.get("id");
 
   const router = useRouter();
 
@@ -55,16 +61,14 @@ const FollowButton: FC<IFollowButton> = ({ publisher, size }) => {
 
       if (isFollower) {
         dispatch(unfollow(publisher?.id));
-        dispatch(removeFollower(user.id));
+        if (removeFollower) {
+          removeFollower();
+        }
       } else {
         dispatch(follow(publisher));
-        dispatch(
-          addFollower({
-            id: user.id,
-            firstName: user.firstName,
-            lastName: user.lastName,
-          }),
-        );
+        if (addFollower) {
+          addFollower();
+        }
       }
 
       console.log(data);

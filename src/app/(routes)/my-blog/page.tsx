@@ -30,7 +30,7 @@ const Page = () => {
 
   const [category, setCategory] = useState<number>(0);
 
-  const drawerWidth = 340;
+  const drawerWidth = 380;
 
   useEffect(() => {
     dispatch(getUserBlogs());
