@@ -1,3 +1,5 @@
+import NextAuth from "next-auth";
+
 export interface IBlog {
   id: number;
   title: string;
@@ -34,4 +36,16 @@ export interface Follower {
   id: number;
   firstName: string;
   lastName: string;
+}
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: number;
+      firstName: string;
+      lastName: string;
+      email: string;
+      access_token: string;
+    };
+  }
 }

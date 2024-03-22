@@ -10,9 +10,9 @@ import {
 
 import store from "../store";
 
-import { likeBlogs } from "../../../api/liked-blogs/likeBlogs";
-import { removeLikedBlog } from "../../../api/liked-blogs/removeLikedBlog";
-import { getAllLikedBlogs } from "../../../api/liked-blogs/getAllLikedBlogs";
+import { likeBlogs } from "../../../utilis/liked-blogs/likeBlogs";
+import { removeLikedBlog } from "../../../utilis/liked-blogs/removeLikedBlog";
+import { getAllLikedBlogs } from "../../../utilis/liked-blogs/getAllLikedBlogs";
 import { ILikedBlog } from "../../../utilis/types/definitions";
 
 function* getLikedBlogs(): Generator<any, void, any> {

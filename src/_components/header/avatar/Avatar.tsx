@@ -20,11 +20,14 @@ import { logOut } from "../../../lib/store/actions/user.actions";
 import PersonIcon from "@mui/icons-material/Person";
 import { useRouter } from "next/navigation";
 import { setLikedBlogs } from "../../../lib/store/actions/likedBlogs.actions";
+import { useSession, signOut } from "next-auth/react";
 
 const Avatar = () => {
   const router = useRouter();
 
-  const user = useAppSelector((state) => state.user.user);
+  // const user = useAppSelector((state) => state.user.user);
+  const { data } = useSession();
+  const user = data?.user;
   const dispatch = useDispatch();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -34,12 +37,8 @@ const Avatar = () => {
     setAnchorEl(e.currentTarget);
   };
 
-  const onLogOut = () => {
-    Cookies.remove("token");
-    Cookies.remove("id");
-
-    dispatch(logOut());
-    dispatch(setLikedBlogs([]));
+  const onLogOut = async () => {
+    await signOut({ redirect: false });
     handleClose();
     router.replace("/");
   };
@@ -91,21 +90,21 @@ const Avatar = () => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <Link href={user.id ? "/my-blog" : ""}>
+        <Link href={user?.id ? "/my-blog" : ""}>
           <MenuItem onClick={handleClose}>
             <Box display={"flex"} gap={1} alignItems={"center"}>
-              <PersonIcon /> {user.firstName ? user.firstName : "Guest"}
+              <PersonIcon /> {user?.firstName ? user?.firstName : "Guest"}
             </Box>
           </MenuItem>
         </Link>
 
-        {user.id && (
+        {user?.id && (
           <Link href={"/liked-blogs"}>
             <MenuItem onClick={handleClose}>Liked Blogs</MenuItem>
           </Link>
         )}
 
-        {user.id && (
+        {user?.id && (
           <Link href={"/reset-password"}>
             <MenuItem onClick={handleClose}>Change password</MenuItem>
           </Link>
@@ -113,7 +112,7 @@ const Avatar = () => {
 
         <Divider />
 
-        {user.id ? (
+        {user?.id ? (
           <MenuItem onClick={onLogOut}>
             <Box display={"flex"} alignItems={"center"}>
               <ListItemIcon>

@@ -1,7 +1,7 @@
 import axios from "axios";
 
-import { createConfigForRequest } from "../../utilis/createConfigForRequest";
-import { ILikedBlog } from "../../utilis/types/definitions";
+import { createConfigForRequest } from "../createConfigForRequest";
+import { ILikedBlog } from "../types/definitions";
 
 export async function likeBlogs(blogId: number) {
   try {

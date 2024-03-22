@@ -27,9 +27,10 @@ const FollowButton: FC<IFollowButton> = ({
   removeFollower,
 }) => {
   const dispatch = useDispatch();
+
   const [isFollower, setIsFollower] = useState<boolean>(false);
+
   const user = useAppSelector((state) => state.user.user);
-  const authorId = Cookies.get("id");
 
   const router = useRouter();
 

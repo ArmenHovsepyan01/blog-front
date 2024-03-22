@@ -1,4 +1,4 @@
-import { createConfigForRequest } from "../../utilis/createConfigForRequest";
+import { createConfigForRequest } from "../createConfigForRequest";
 import axios from "axios";
 
 export async function getAllLikedBlogs() {

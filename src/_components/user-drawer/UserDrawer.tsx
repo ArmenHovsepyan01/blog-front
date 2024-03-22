@@ -1,64 +1,60 @@
 "use client";
 
-import React, { FC, useEffect, useState } from "react";
+import React from "react";
 
 import { Box, Drawer, Typography } from "@mui/material";
 
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
-import { RequestStatus } from "../../utilis/types/enums";
-
 import { useAppSelector } from "../../lib/store/hoooks/hooks";
 
 import FollowButton from "../follow-button/FollowButton";
-import FollowersList from "./followers-list/FollowersList";
 
-interface IUserDrawer {
-  user: any;
-  isLoading: boolean;
-}
+import { useAuthor } from "../../hooks/useAuthor";
+import { useParams, usePathname } from "next/navigation";
+import Link from "next/link";
 
-const UserDrawer: FC<IUserDrawer> = ({ user, isLoading }) => {
-  const [publisher, setPublisher] = useState(user);
+const UserDrawer = () => {
+  const params = useParams<{ userName: string; userId: string }>();
+
+  const { userId } = params;
+  const { user, isLoading, mutate } = useAuthor(userId);
+
   const currentUser = useAppSelector((state) => state.user.user);
-
-  useEffect(() => {
-    setPublisher(user);
-  }, [user]);
 
   const drawerWidth = 380;
 
   const userInfo = {
-    id: user.id,
-    firstName: user.firstName,
-    lastName: user.lastName,
+    id: user?.id,
+    firstName: user?.firstName,
+    lastName: user?.lastName,
   };
 
-  const addFollower = () => {
+  const addFollower = async () => {
     const follower = {
       id: currentUser.id,
       firstName: currentUser.firstName,
       lastName: currentUser.lastName,
     };
 
-    setPublisher((prev: any) => {
-      return {
-        ...prev,
-        userFollowers: [...prev.userFollowers, follower],
-      };
+    await mutate({
+      data: {
+        ...user,
+        userFollowers: [...user.userFollowers, follower],
+      },
     });
   };
 
-  const removeFollower = () => {
-    setPublisher((prev: any) => {
-      return {
-        ...prev,
+  const removeFollower = async () => {
+    await mutate({
+      data: {
+        ...user,
         userFollowers: [
-          ...prev.userFollowers.filter(
+          ...user.userFollowers.filter(
             (follower: any) => follower.id !== currentUser.id,
           ),
         ],
-      };
+      },
     });
   };
 
@@ -79,38 +75,38 @@ const UserDrawer: FC<IUserDrawer> = ({ user, isLoading }) => {
         },
       }}
     >
-      <Box display={"flex"} gap={2} flexDirection={"column"}>
-        <AccountCircleIcon
-          fontSize={"large"}
-          sx={{ width: "65px", height: "65px" }}
-        />
-        <Typography variant={"h5"}>
-          {publisher.firstName} {publisher.lastName}
-        </Typography>
-        <span>
-          {publisher?.userFollowers?.length}{" "}
-          {publisher?.userFollowers?.length > 1 ? "Followers" : "Follower"}
-        </span>
-        {!isLoading && currentUser.id !== user.id && (
-          <FollowButton
-            publisher={userInfo}
-            addFollower={addFollower}
-            removeFollower={removeFollower}
+      {isLoading ? (
+        <div>Lading...</div>
+      ) : (
+        <Box display={"flex"} gap={2} flexDirection={"column"}>
+          <AccountCircleIcon
+            fontSize={"large"}
+            sx={{ width: "65px", height: "65px" }}
           />
-        )}
-
-        <FollowersList
-          followers={publisher?.userFollowers}
-          userName={publisher.firstName}
-          title={"Followers"}
-        />
-
-        <FollowersList
-          followers={publisher?.userFollowed}
-          userName={publisher.firstName}
-          title={"Followings"}
-        />
-      </Box>
+          <Typography variant={"h5"}>
+            {user.firstName} {user.lastName}
+          </Typography>
+          <a href={`/user/${params.userName}/${params.userId}/followers`}>
+            <span>
+              {user?.userFollowers?.length}{" "}
+              {user?.userFollowers?.length > 1 ? "Followers" : "Follower"}
+            </span>
+          </a>
+          <a href={`/user/${params.userName}/${params.userId}/followings`}>
+            <span>
+              {user?.userFollowed?.length}{" "}
+              {user?.userFollowed?.length > 1 ? "Followings" : "Following"}
+            </span>
+          </a>
+          {!isLoading && currentUser.id !== user.id && (
+            <FollowButton
+              publisher={userInfo}
+              addFollower={addFollower}
+              removeFollower={removeFollower}
+            />
+          )}
+        </Box>
+      )}
     </Drawer>
   );
 };

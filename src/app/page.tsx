@@ -12,8 +12,11 @@ import { RequestStatus } from "@/utilis/types/enums";
 import { IBlog } from "@/utilis/types/definitions";
 import BlogCard from "@/_components/blog-card/BlogCard";
 import Loading from "@/app/loading";
+import { useSession } from "next-auth/react";
 
 export default function Home() {
+  const { data } = useSession();
+  console.log(data);
   const dispatch = useDispatch();
   const loading = useAppSelector((state) => state.blog.status);
 

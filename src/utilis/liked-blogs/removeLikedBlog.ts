@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createConfigForRequest } from "../../utilis/createConfigForRequest";
+import { createConfigForRequest } from "../createConfigForRequest";
 
 export async function removeLikedBlog(id: number) {
   try {

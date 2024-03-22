@@ -12,7 +12,6 @@ const Loading = () => {
         position: "relative",
       }}
     >
-      {/*side bar loading*/}
       <Box
         sx={{ marginRight: `380px` }}
         display={"flex"}

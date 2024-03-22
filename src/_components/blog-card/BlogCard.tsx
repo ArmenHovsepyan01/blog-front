@@ -62,7 +62,8 @@ const BlogCard: FC<IBlogCard> = ({ blog }) => {
             }}
             fill
             sizes="(max-width: 700px) 400px"
-            loading={"lazy"}
+            priority={true}
+            quality={100}
           />
         </CardMedia>
       </Link>
@@ -89,7 +90,7 @@ const BlogCard: FC<IBlogCard> = ({ blog }) => {
 
         <Link href={`/blog/${generateLinkTitle(blog.title)}/${blog.id}`}>
           <Box display={"flex"} gap={4} flexDirection={"column"}>
-            <Typography variant={"h5"}>{blog.title}</Typography>
+            <Typography variant={"h6"}>{blog.title}</Typography>
             <p style={{ lineBreak: "anywhere" }}>
               {showLessText(blog.content)}
             </p>
