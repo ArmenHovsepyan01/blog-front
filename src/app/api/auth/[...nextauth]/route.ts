@@ -23,7 +23,8 @@ const handler = NextAuth({
             return null;
           }
         } catch (error: any) {
-          throw new Error(error.message);
+          console.error(error.response.data.error.message);
+          throw new Error(error.response.data.error.message);
         }
       },
     }),
@@ -46,7 +47,7 @@ const handler = NextAuth({
     },
   },
   // use env variable in production
-  secret: "303cc9cd309c2d47477c",
+  secret: process.env.NEXTAUTH_SECRET,
 });
 
 export { handler as GET, handler as POST };

@@ -86,18 +86,18 @@ const UserDrawer = () => {
           <Typography variant={"h5"}>
             {user.firstName} {user.lastName}
           </Typography>
-          <a href={`/user/${params.userName}/${params.userId}/followers`}>
+          <Link href={`/user/${params.userName}/${params.userId}/followers`}>
             <span>
               {user?.userFollowers?.length}{" "}
               {user?.userFollowers?.length > 1 ? "Followers" : "Follower"}
             </span>
-          </a>
-          <a href={`/user/${params.userName}/${params.userId}/followings`}>
+          </Link>
+          <Link href={`/user/${params.userName}/${params.userId}/followings`}>
             <span>
               {user?.userFollowed?.length}{" "}
               {user?.userFollowed?.length > 1 ? "Followings" : "Following"}
             </span>
-          </a>
+          </Link>
           {!isLoading && currentUser.id !== user.id && (
             <FollowButton
               publisher={userInfo}

@@ -78,25 +78,30 @@ const Login = () => {
         redirect: false,
       });
 
+      if (res?.error && !res?.ok) {
+        if (res.error.toLowerCase().includes("password")) {
+          return setError(
+              "password",
+              { type: "custom", message: res.error },
+              { shouldFocus: true },
+          );
+        }
+
+        if (res.error.toLowerCase().includes("email")) {
+          return setError(
+              "email",
+              { type: "custom", message: res.error },
+              { shouldFocus: true },
+          );
+        }
+        return setCustomError(res.error);
+      }
+
       router.replace("/");
+
     } catch (e: any) {
+      console.error(e);
       const errorMessage = e.response.data.error.message;
-
-      if (errorMessage.toLowerCase().includes("password")) {
-        return setError(
-          "password",
-          { type: "custom", message: e.response.data.error.message },
-          { shouldFocus: true },
-        );
-      }
-
-      if (errorMessage.toLowerCase().includes("email")) {
-        return setError(
-          "email",
-          { type: "custom", message: e.response.data.error.message },
-          { shouldFocus: true },
-        );
-      }
 
       setCustomError(errorMessage);
     }
