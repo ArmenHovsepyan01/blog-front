@@ -9,18 +9,18 @@ import {
 import axios from "axios";
 
 import Cookies from "js-cookie";
+import { createConfigForRequest } from "../../../utilis/createConfigForRequest";
 
 function* getUser() {
   try {
-    const token = Cookies.get("token");
-
     yield put(getUserRequest());
+    const config: Object = yield call(createConfigForRequest);
 
-    const { data } = yield call(axios.get, "http://localhost:5000/auth", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const { data } = yield call(
+      axios.get,
+      "http://localhost:5000/auth",
+      config,
+    );
 
     yield put(setUser(data.data));
   } catch (e) {

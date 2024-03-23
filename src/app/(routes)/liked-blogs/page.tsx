@@ -15,19 +15,25 @@ import { RequestStatus } from "@/utilis/types/enums";
 import { getLikeBlogs } from "@/lib/store/actions/likedBlogs.actions";
 
 import Loading from "@/app/loading";
+import { useSession } from "next-auth/react";
 
 const LikedBlogs = () => {
-  const likedBlogs = useAppSelector((state) => state.likedBlogs.likedBlogs);
-  const userStatus = useAppSelector((state) => state.user.status);
-  const likedBlogsStatus = useAppSelector((state) => state.likedBlogs.status);
+  const { likedBlogs, status: likedBlogsStatus } = useAppSelector(
+    (state) => state.likedBlogs,
+  );
 
   const dispatch = useDispatch();
 
+  const { status } = useSession();
+
   useEffect(() => {
-    if (userStatus === RequestStatus.SUCCESS) {
+    if (
+      status === "authenticated" &&
+      likedBlogsStatus !== RequestStatus.SUCCESS
+    ) {
       dispatch(getLikeBlogs());
     }
-  }, [userStatus]);
+  }, [status]);
 
   return (
     <main>

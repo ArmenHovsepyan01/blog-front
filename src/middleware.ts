@@ -1,40 +1,29 @@
-import { NextRequest, NextResponse } from "next/server";
+import { withAuth } from "next-auth/middleware";
+import { NextResponse } from "next/server";
 
-export default async function middleware(request: NextRequest) {
-  const isLoggedIn = request.cookies.get("token")?.value;
+export default withAuth(
+  async function middleware(req) {
+    const { pathname, searchParams } = req.nextUrl;
 
-  const id = request.cookies.get("id")?.value;
+    // if (
+    //   pathname ===
+    //   `/user/@${(req.nextauth.token?.firstName as string).toLowerCase()}/${req.nextauth.token?.id}`
+    // ) {
+    //   return NextResponse.redirect(new URL("/my-blog", req.url));
+    // }
 
-  const { pathname, searchParams } = request.nextUrl;
-
-  if (
-    (pathname === "/my-blog" ||
-      pathname === "/reset-password" ||
-      pathname === "/change-password" ||
-      pathname === "/liked-blogs") &&
-    !isLoggedIn
-  ) {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
-
-  if (pathname === "/change-password") {
-    const code = new URLSearchParams(searchParams).get("code");
-    if (!code) return NextResponse.redirect(new URL("/", request.url));
-  }
-
-  if (pathname === `/user/${id}`) {
-    return NextResponse.redirect(new URL("/my-blog", request.url));
-  }
-
-  return NextResponse.next();
-}
+    if (pathname === "/change-password") {
+      const code = new URLSearchParams(searchParams).get("code");
+      if (!code) return NextResponse.redirect(new URL("/", req.url));
+    }
+  },
+  {
+    callbacks: {
+      authorized: ({ token }) => !!token?.access_token,
+    },
+  },
+);
 
 export const config = {
-  matcher: [
-    "/liked-blogs",
-    "/my-blog",
-    "/reset-password",
-    "/change-password",
-    "/user/:path*",
-  ],
+  matcher: ["/liked-blogs", "/my-blog", "/reset-password", "/change-password"],
 };

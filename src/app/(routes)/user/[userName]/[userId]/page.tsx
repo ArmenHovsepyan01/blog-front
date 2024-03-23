@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC, memo } from "react";
+import React, { FC, memo, useEffect } from "react";
 
 import { Box, Divider, Typography } from "@mui/material";
 
@@ -16,6 +16,10 @@ import useSWR from "swr";
 
 import { getPublisherInfo } from "../../../../../utilis/publisher-helpers/getPublisher";
 import { useAuthor } from "../../../../../hooks/useAuthor";
+import { useDispatch } from "react-redux";
+import { useUserFollowings } from "../../../../../hooks/useUserFollowings";
+import { useSession } from "next-auth/react";
+import { getUser } from "../../../../../lib/store/actions/user.actions";
 
 interface IUser {
   params: {
@@ -25,6 +29,13 @@ interface IUser {
 
 const User: FC<IUser> = ({ params: { userId } }) => {
   const { user, isLoading } = useAuthor(userId);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (process.browser) {
+      dispatch(getUser());
+    }
+  }, [dispatch]);
 
   return (
     <>

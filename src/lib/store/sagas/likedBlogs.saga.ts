@@ -15,11 +15,12 @@ import { removeLikedBlog } from "../../../utilis/liked-blogs/removeLikedBlog";
 import { getAllLikedBlogs } from "../../../utilis/liked-blogs/getAllLikedBlogs";
 import { ILikedBlog } from "../../../utilis/types/definitions";
 
-function* getLikedBlogs(): Generator<any, void, any> {
+function* getLikedBlogs(action: any): Generator<any, void, any> {
   try {
     yield put(getLikedBlogsRequest());
+
     const data = yield call(getAllLikedBlogs);
-    console.log(data.data);
+
     yield put(setLikedBlogs(data.data));
   } catch (e) {
     console.error(e);

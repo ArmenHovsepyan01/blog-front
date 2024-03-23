@@ -17,8 +17,10 @@ import { deleteBlogById } from "../../../utilis/user-blogs-helpers/deleteBlog";
 import { updateBlogById } from "../../../utilis/user-blogs-helpers/updateBlog";
 import { createBlog } from "../../../utilis/user-blogs-helpers/addBlog";
 
-function* getBlogs(): Generator<any, void, any> {
+function* getBlogs(action: any): Generator<any, void, any> {
   try {
+    const token = action.payload.token;
+
     yield put(getUserBlogsRequest());
     const data: IBlog[] = yield call(getUserBlogs);
 

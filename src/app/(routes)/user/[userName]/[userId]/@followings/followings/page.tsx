@@ -36,7 +36,7 @@ const Page = () => {
 
   return (
     <Box sx={{ padding: "12px" }}>
-      <FollowersList followers={followers} title={"Followed"} />
+      <FollowersList title={"Followed"} />
     </Box>
   );
 };

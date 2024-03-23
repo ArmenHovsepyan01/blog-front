@@ -5,7 +5,7 @@ import { ILikedBlog } from "../types/definitions";
 
 export async function likeBlogs(blogId: number) {
   try {
-    const config = createConfigForRequest();
+    const config = await createConfigForRequest();
 
     const body = {
       blogId,

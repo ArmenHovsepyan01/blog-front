@@ -13,8 +13,11 @@ export enum UserBlogsAction {
   DELETE_USER_BLOG = "DELETE_USER_BLOG",
 }
 
-export const getUserBlogs = () => ({
+export const getUserBlogs = (token?: string) => ({
   type: UserBlogsAction.GET_USER_BLOGS,
+  payload: {
+    token,
+  },
 });
 
 export const getUserBlogsRequest = () => ({

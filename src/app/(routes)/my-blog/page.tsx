@@ -21,6 +21,7 @@ import { IBlog } from "../../../utilis/types/definitions";
 import { RequestStatus } from "../../../utilis/types/enums";
 
 import Loading from "@/app/loading";
+import { useSession } from "next-auth/react";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -32,9 +33,13 @@ const Page = () => {
 
   const drawerWidth = 380;
 
+  const { data: session } = useSession();
+
   useEffect(() => {
-    dispatch(getUserBlogs());
-  }, []);
+    if (session?.user?.access_token) {
+      dispatch(getUserBlogs(session?.user.access_token));
+    }
+  }, [session]);
 
   const blogs = useMemo(() => {
     if (category === 0) {

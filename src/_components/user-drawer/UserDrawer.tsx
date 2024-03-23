@@ -20,8 +20,6 @@ const UserDrawer = () => {
   const { userId } = params;
   const { user, isLoading, mutate } = useAuthor(userId);
 
-  const currentUser = useAppSelector((state) => state.user.user);
-
   const drawerWidth = 380;
 
   const userInfo = {
@@ -31,31 +29,31 @@ const UserDrawer = () => {
   };
 
   const addFollower = async () => {
-    const follower = {
-      id: currentUser.id,
-      firstName: currentUser.firstName,
-      lastName: currentUser.lastName,
-    };
-
-    await mutate({
-      data: {
-        ...user,
-        userFollowers: [...user.userFollowers, follower],
-      },
-    });
+    // const follower = {
+    //   id: currentUser.id,
+    //   firstName: currentUser.firstName,
+    //   lastName: currentUser.lastName,
+    // };
+    //
+    // await mutate({
+    //   data: {
+    //     ...user,
+    //     userFollowers: [...user.userFollowers, follower],
+    //   },
+    // });
   };
 
   const removeFollower = async () => {
-    await mutate({
-      data: {
-        ...user,
-        userFollowers: [
-          ...user.userFollowers.filter(
-            (follower: any) => follower.id !== currentUser.id,
-          ),
-        ],
-      },
-    });
+    // await mutate({
+    //   data: {
+    //     ...user,
+    //     userFollowers: [
+    //       ...user.userFollowers.filter(
+    //         (follower: any) => follower.id !== currentUser.id,
+    //       ),
+    //     ],
+    //   },
+    // });
   };
 
   return (
@@ -98,13 +96,13 @@ const UserDrawer = () => {
               {user?.userFollowed?.length > 1 ? "Followings" : "Following"}
             </span>
           </Link>
-          {!isLoading && currentUser.id !== user.id && (
-            <FollowButton
-              publisher={userInfo}
-              addFollower={addFollower}
-              removeFollower={removeFollower}
-            />
-          )}
+          {/*{!isLoading && currentUser.id !== user.id && (*/}
+          {/*  <FollowButton*/}
+          {/*    publisher={userInfo}*/}
+          {/*    addFollower={addFollower}*/}
+          {/*    removeFollower={removeFollower}*/}
+          {/*  />*/}
+          {/*)}*/}
         </Box>
       )}
     </Drawer>

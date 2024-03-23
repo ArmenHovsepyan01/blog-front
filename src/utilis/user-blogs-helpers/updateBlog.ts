@@ -10,7 +10,7 @@ interface IValues {
 export const updateBlogById = async (values: any, id: number) => {
   try {
     const url = `${process.env.NEXT_PUBLIC_API_URI}/blog/${id}`;
-    const config = createConfigForRequest();
+    const config = await createConfigForRequest();
 
     const { data } = await axios.post(url, values, config);
 

@@ -8,7 +8,7 @@ type UserActions = {
 };
 
 interface IInitialState {
-  user?: IUser | {};
+  user: IUser | {};
   status: RequestStatus;
   error?: any;
 }
@@ -48,7 +48,6 @@ export default function userReducer(state = initialState, action: UserActions) {
           ...state.user,
           userFollowed: [
             // @ts-ignore
-            ...state.user.userFollowed,
             action.payload.follower,
           ],
         },

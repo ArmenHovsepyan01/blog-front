@@ -2,13 +2,11 @@
 
 import React, { useState } from "react";
 
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 
 import { Button, Link, TextField, Box } from "@mui/material";
 
 import { useRouter } from "next/navigation";
-
-import { useDispatch } from "react-redux";
 
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 
@@ -16,13 +14,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import * as yup from "yup";
 
-import axios from "axios";
-
 import FormWrapper from "../../../_components/form-wrapper/FormWrapper";
-
-import { setUser } from "@/lib/store/actions/user.actions";
-
-import Cookies from "js-cookie";
 
 const schema = yup
   .object({
@@ -47,31 +39,12 @@ const Login = () => {
     resolver: yupResolver(schema),
   });
 
-  const dispatch = useDispatch();
-
   const [customError, setCustomError] = useState<string>("");
 
   const router = useRouter();
-  const { data } = useSession();
 
   const onSubmit: SubmitHandler<FormData> = async (values) => {
     try {
-      // const url = `${process.env.NEXT_PUBLIC_API_URI}/login`;
-      // if (values.email && values.password) {
-      //   const { data } = await axios.post(url, values);
-      //
-      //   Cookies.set("token", data.data.access_token);
-      //   Cookies.set("id", data.data.user.id);
-      //
-      //   dispatch(setUser(data.data.user));
-      //
-      //   if (customError) {
-      //     setCustomError("");
-      //   }
-      //
-      //   router.replace("/");
-      // }
-
       const res = await signIn("login", {
         email: values.email,
         password: values.password,
@@ -81,24 +54,23 @@ const Login = () => {
       if (res?.error && !res?.ok) {
         if (res.error.toLowerCase().includes("password")) {
           return setError(
-              "password",
-              { type: "custom", message: res.error },
-              { shouldFocus: true },
+            "password",
+            { type: "custom", message: res.error },
+            { shouldFocus: true },
           );
         }
 
         if (res.error.toLowerCase().includes("email")) {
           return setError(
-              "email",
-              { type: "custom", message: res.error },
-              { shouldFocus: true },
+            "email",
+            { type: "custom", message: res.error },
+            { shouldFocus: true },
           );
         }
         return setCustomError(res.error);
       }
 
       router.replace("/");
-
     } catch (e: any) {
       console.error(e);
       const errorMessage = e.response.data.error.message;

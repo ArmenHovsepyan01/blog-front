@@ -1,28 +1,34 @@
+"use client";
 import { Box } from "@mui/material";
 import UserDrawer from "../../../../../_components/user-drawer/UserDrawer";
 import { ReactNode } from "react";
 import AuthorTitle from "../../../../../_components/author-title/AuthorTitle";
+import { usePathname, useRouter } from "next/navigation";
 
 type Props = {
   params: {
     userName: string;
+    followers?: string;
   };
+  children: React.ReactNode;
+  followers: React.ReactNode;
+  followings: React.ReactNode;
 };
 
-export const generateMetadata = (route: Props) => {
-  const { params } = route;
-
-  const title = params?.userName
-    ? `Author: ${params.userName}`
-    : "Node Blogs with Next.js";
-  const description =
-    "A blog built with Next.js and featuring Node.js content.";
-
-  return {
-    title,
-    description,
-  };
-};
+// export const generateMetadata = (route: Props) => {
+//   const { params } = route;
+//
+//   const title = params?.userName
+//     ? `Author: ${params.userName}`
+//     : "Node Blogs with Next.js";
+//   const description =
+//     "A blog built with Next.js and featuring Node.js content.";
+//
+//   return {
+//     title,
+//     description,
+//   };
+// };
 
 export default function Layout({
   children,
@@ -30,10 +36,11 @@ export default function Layout({
   followings,
 }: {
   children: React.ReactNode;
-  followers: ReactNode;
-  followings: ReactNode;
+  followers: React.ReactNode;
+  followings: React.ReactNode;
 }) {
-  console.log(typeof followings);
+  const pathname = usePathname();
+
   return (
     <Box
       sx={{
@@ -51,7 +58,11 @@ export default function Layout({
         flexDirection={"column"}
       >
         <AuthorTitle followers={!!followers} followings={!!followings} />
-        {followings ? followings : followers ? followers : children}
+        {pathname.endsWith("/followers")
+          ? followers
+          : pathname.endsWith("/followings")
+            ? followings
+            : children}
       </Box>
     </Box>
   );

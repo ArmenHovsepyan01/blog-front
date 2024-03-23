@@ -3,7 +3,7 @@ import { createConfigForRequest } from "../createConfigForRequest";
 
 export async function removeLikedBlog(id: number) {
   try {
-    const config = createConfigForRequest();
+    const config = await createConfigForRequest();
     const { data } = await axios.delete(
       `${process.env.NEXT_PUBLIC_API_URI}/liked-blogs/${id}`,
       config,

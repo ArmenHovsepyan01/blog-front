@@ -14,21 +14,22 @@ import {
   removeLikedBlog,
 } from "../../../lib/store/actions/likedBlogs.actions";
 import { ILikedBlog } from "../../../utilis/types/definitions";
+import { useSession } from "next-auth/react";
 
 interface IAddToFavorites {
   id: number;
 }
 const AddToFavorites: FC<IAddToFavorites> = ({ id }) => {
-  const isUserLoggedIn = useAppSelector((state) => state.user.status);
+  const { data: session, status } = useSession();
   const likedBlogs = useAppSelector((state) => state.likedBlogs.likedBlogs);
 
-  const link = isUserLoggedIn !== RequestStatus.SUCCESS ? "/login" : "";
+  const link = status !== "authenticated" ? "/login" : "";
 
   const dispatch = useDispatch();
 
   const blog = likedBlogs.find((item: ILikedBlog) => item.blog.id === id);
   const handleOnClick = () => {
-    if (isUserLoggedIn === RequestStatus.SUCCESS) {
+    if (status === "authenticated") {
       if (!blog) {
         dispatch(likeBlog(id));
       } else {

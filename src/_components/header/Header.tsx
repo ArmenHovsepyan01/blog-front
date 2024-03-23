@@ -10,12 +10,6 @@ import { getUser } from "@/lib/store/actions/user.actions";
 
 import { useDispatch } from "react-redux";
 const Header = () => {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(getUser());
-  }, []);
-
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">

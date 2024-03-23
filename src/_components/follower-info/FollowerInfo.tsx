@@ -12,13 +12,32 @@ import Link from "next/link";
 
 import FollowButton from "../follow-button/FollowButton";
 import { useAppSelector } from "../../lib/store/hoooks/hooks";
+import { useSession } from "next-auth/react";
+import { useDispatch } from "react-redux";
+import { follow, unfollow } from "../../lib/store/actions/user.actions";
 
 interface IFollower {
   follower: Follower;
 }
 
 const FollowerInfo: FC<IFollower> = ({ follower }) => {
-  const userId = useAppSelector((state) => state.user.user.id);
+  const dispatch = useDispatch();
+  const { data: session } = useSession();
+  const userFollowed = useAppSelector((state) => state.user.user.userFollowed);
+
+  const isFollower = Boolean(
+    userFollowed?.find((item: Follower) => item.id === follower.id),
+  );
+
+  const addFollow = () => {
+    dispatch(follow(follower));
+    // addFollower(follower);
+  };
+
+  const removeFollow = () => {
+    dispatch(unfollow(follower.id));
+    // removeFollower(follower.id);
+  };
 
   return (
     <Box
@@ -40,7 +59,13 @@ const FollowerInfo: FC<IFollower> = ({ follower }) => {
             <span>{`${follower.firstName} ${follower?.lastName}`}</span>
           </Link>
         </Box>
-        {userId !== follower.id && <FollowButton publisher={follower} />}
+        {session?.user.id !== follower.id && (
+          <FollowButton
+            followerId={follower.id}
+            addFollow={addFollow}
+            removeFollow={removeFollow}
+          />
+        )}
       </>
     </Box>
   );

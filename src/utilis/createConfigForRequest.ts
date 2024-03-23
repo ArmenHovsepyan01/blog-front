@@ -1,7 +1,10 @@
-import Cookies from "js-cookie";
+import { getSession } from "next-auth/react";
 
-export function createConfigForRequest() {
-  const token = Cookies.get("token");
+export async function createConfigForRequest(): Promise<Object> {
+  const session = await getSession();
+
+  const token = session?.user.access_token;
+
   if (!token) return {};
 
   return {

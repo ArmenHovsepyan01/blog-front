@@ -13,13 +13,9 @@ import {
 
 import Link from "next/link";
 
-import { useAppSelector } from "../../../lib/store/hoooks/hooks";
 import { useDispatch } from "react-redux";
-import Cookies from "js-cookie";
-import { logOut } from "../../../lib/store/actions/user.actions";
 import PersonIcon from "@mui/icons-material/Person";
 import { useRouter } from "next/navigation";
-import { setLikedBlogs } from "../../../lib/store/actions/likedBlogs.actions";
 import { useSession, signOut } from "next-auth/react";
 
 const Avatar = () => {

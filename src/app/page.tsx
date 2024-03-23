@@ -15,16 +15,12 @@ import Loading from "@/app/loading";
 import { useSession } from "next-auth/react";
 
 export default function Home() {
-  const { data } = useSession();
-  console.log(data);
+  const { status } = useSession();
+
   const dispatch = useDispatch();
   const loading = useAppSelector((state) => state.blog.status);
 
-  const { blogs, status, pagesCount, error } = useAppSelector(
-    (state) => state.blog,
-  );
-
-  const userStatus = useAppSelector((state) => state.user.status);
+  const { blogs, pagesCount, error } = useAppSelector((state) => state.blog);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const limit = 2;
@@ -38,10 +34,10 @@ export default function Home() {
   }, [dispatch, currentPage]);
 
   useEffect(() => {
-    if (userStatus === RequestStatus.SUCCESS) {
+    if (status === "authenticated") {
       dispatch(getLikeBlogs());
     }
-  }, [userStatus]);
+  }, [status]);
 
   const OnPageChange = (e: React.ChangeEvent<unknown>, page: number) => {
     setCurrentPage(page);
