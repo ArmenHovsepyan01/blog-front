@@ -1,6 +1,6 @@
 import { UserBlogsAction } from "../actions/userBlogs.action";
-import { RequestStatus } from "../../../utilis/types/enums";
-import { IBlog } from "../../../utilis/types/definitions";
+import { RequestStatus } from "@/utilis/types/enums";
+import { IBlog } from "@/utilis/types/definitions";
 
 interface IAction {
   type: UserBlogsAction;

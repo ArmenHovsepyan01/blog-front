@@ -1,4 +1,4 @@
-import { IBlog } from "../../../utilis/types/definitions";
+import { IBlog } from "@/utilis/types/definitions";
 
 export enum UserBlogsAction {
   GET_USER_BLOGS = "GET_USER_BLOGS",

@@ -2,24 +2,19 @@
 
 import React, { FC, memo, useEffect } from "react";
 
-import { Box, Divider, Typography } from "@mui/material";
-
-import UserDrawer from "../../../../../_components/user-drawer/UserDrawer";
+import { Box } from "@mui/material";
 
 import BlogCard from "../../../../../_components/blog-card/BlogCard";
 
-import { IBlog } from "../../../../../utilis/types/definitions";
+import { IBlog } from "@/utilis/types/definitions";
 
 import Loading from "./loading";
 
-import useSWR from "swr";
-
-import { getPublisherInfo } from "../../../../../utilis/publisher-helpers/getPublisher";
-import { useAuthor } from "../../../../../hooks/useAuthor";
+import { useAuthor } from "@/hooks/useAuthor";
 import { useDispatch } from "react-redux";
-import { useUserFollowings } from "../../../../../hooks/useUserFollowings";
+import { undef } from "@redux-saga/is";
+import { getFollowed } from "@/lib/store/actions/followed.actions";
 import { useSession } from "next-auth/react";
-import { getUser } from "../../../../../lib/store/actions/user.actions";
 
 interface IUser {
   params: {
@@ -28,14 +23,18 @@ interface IUser {
 }
 
 const User: FC<IUser> = ({ params: { userId } }) => {
-  const { user, isLoading } = useAuthor(userId);
   const dispatch = useDispatch();
+  const { data: session } = useSession();
+
+  const { user, isLoading } = useAuthor(userId);
+  const id = session?.user.id;
 
   useEffect(() => {
-    if (process.browser) {
-      dispatch(getUser());
+    if (typeof window !== "undefined" && id) {
+      // @ts-ignore
+      dispatch(getFollowed(id));
     }
-  }, [dispatch]);
+  }, [id]);
 
   return (
     <>

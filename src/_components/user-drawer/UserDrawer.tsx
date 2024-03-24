@@ -4,21 +4,19 @@ import React from "react";
 
 import { Box, Drawer, Typography } from "@mui/material";
 
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-
-import { useAppSelector } from "../../lib/store/hoooks/hooks";
-
-import FollowButton from "../follow-button/FollowButton";
-
-import { useAuthor } from "../../hooks/useAuthor";
-import { useParams, usePathname } from "next/navigation";
+import { useAuthor } from "@/hooks/useAuthor";
+import { useParams } from "next/navigation";
 import Link from "next/link";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { useSession } from "next-auth/react";
+import FollowButton from "@/_components/follow-button/FollowButton";
 
 const UserDrawer = () => {
   const params = useParams<{ userName: string; userId: string }>();
 
   const { userId } = params;
   const { user, isLoading, mutate } = useAuthor(userId);
+  const { data: session } = useSession();
 
   const drawerWidth = 380;
 
@@ -29,31 +27,31 @@ const UserDrawer = () => {
   };
 
   const addFollower = async () => {
-    // const follower = {
-    //   id: currentUser.id,
-    //   firstName: currentUser.firstName,
-    //   lastName: currentUser.lastName,
-    // };
-    //
-    // await mutate({
-    //   data: {
-    //     ...user,
-    //     userFollowers: [...user.userFollowers, follower],
-    //   },
-    // });
+    const follower = {
+      id: session?.user.id,
+      firstName: session?.user.firstName,
+      lastName: session?.user.lastName,
+    };
+
+    await mutate({
+      data: {
+        ...user,
+        userFollowers: [...user.userFollowers, follower],
+      },
+    });
   };
 
   const removeFollower = async () => {
-    // await mutate({
-    //   data: {
-    //     ...user,
-    //     userFollowers: [
-    //       ...user.userFollowers.filter(
-    //         (follower: any) => follower.id !== currentUser.id,
-    //       ),
-    //     ],
-    //   },
-    // });
+    await mutate({
+      data: {
+        ...user,
+        userFollowers: [
+          ...user.userFollowers.filter(
+            (follower: any) => follower.id !== session?.user.id,
+          ),
+        ],
+      },
+    });
   };
 
   return (
@@ -96,13 +94,13 @@ const UserDrawer = () => {
               {user?.userFollowed?.length > 1 ? "Followings" : "Following"}
             </span>
           </Link>
-          {/*{!isLoading && currentUser.id !== user.id && (*/}
-          {/*  <FollowButton*/}
-          {/*    publisher={userInfo}*/}
-          {/*    addFollower={addFollower}*/}
-          {/*    removeFollower={removeFollower}*/}
-          {/*  />*/}
-          {/*)}*/}
+          {!isLoading && session?.user.id !== user.id && (
+            <FollowButton
+              follower={userInfo}
+              addFollower={addFollower}
+              removeFollower={removeFollower}
+            />
+          )}
         </Box>
       )}
     </Drawer>

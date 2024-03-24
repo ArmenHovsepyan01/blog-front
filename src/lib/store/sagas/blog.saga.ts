@@ -1,5 +1,6 @@
-import { put, call, takeEvery, fork, delay } from "redux-saga/effects";
+import { put, call, takeEvery, fork } from "redux-saga/effects";
 import axios from "axios";
+
 import {
   BlogActionsTypes,
   getBlogsRequest,

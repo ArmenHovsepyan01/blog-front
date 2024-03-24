@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import { fetcher } from "../utilis/fetcher";
+import { fetcher } from "@/utilis/fetcher";
 
 export function useAuthor(id?: string) {
   const url = `http://localhost:5000/user/${id}`;

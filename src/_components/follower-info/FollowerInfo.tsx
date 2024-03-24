@@ -2,7 +2,7 @@
 
 import React, { FC } from "react";
 
-import { Follower } from "../../utilis/types/definitions";
+import { Follower } from "@/utilis/types/definitions";
 
 import { Box } from "@mui/material";
 
@@ -11,33 +11,15 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Link from "next/link";
 
 import FollowButton from "../follow-button/FollowButton";
-import { useAppSelector } from "../../lib/store/hoooks/hooks";
 import { useSession } from "next-auth/react";
 import { useDispatch } from "react-redux";
-import { follow, unfollow } from "../../lib/store/actions/user.actions";
 
 interface IFollower {
   follower: Follower;
 }
 
 const FollowerInfo: FC<IFollower> = ({ follower }) => {
-  const dispatch = useDispatch();
   const { data: session } = useSession();
-  const userFollowed = useAppSelector((state) => state.user.user.userFollowed);
-
-  const isFollower = Boolean(
-    userFollowed?.find((item: Follower) => item.id === follower.id),
-  );
-
-  const addFollow = () => {
-    dispatch(follow(follower));
-    // addFollower(follower);
-  };
-
-  const removeFollow = () => {
-    dispatch(unfollow(follower.id));
-    // removeFollower(follower.id);
-  };
 
   return (
     <Box
@@ -60,11 +42,7 @@ const FollowerInfo: FC<IFollower> = ({ follower }) => {
           </Link>
         </Box>
         {session?.user.id !== follower.id && (
-          <FollowButton
-            followerId={follower.id}
-            addFollow={addFollow}
-            removeFollow={removeFollow}
-          />
+          <FollowButton follower={follower} />
         )}
       </>
     </Box>

@@ -2,17 +2,21 @@
 
 import React, { useState } from "react";
 
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
 import { Button, Link, TextField, Box } from "@mui/material";
 
 import { useRouter } from "next/navigation";
+
+import { useDispatch } from "react-redux";
 
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import * as yup from "yup";
+
+import axios from "axios";
 
 import FormWrapper from "../../../_components/form-wrapper/FormWrapper";
 
@@ -39,12 +43,31 @@ const Login = () => {
     resolver: yupResolver(schema),
   });
 
+  const dispatch = useDispatch();
+
   const [customError, setCustomError] = useState<string>("");
 
   const router = useRouter();
+  const { data } = useSession();
 
   const onSubmit: SubmitHandler<FormData> = async (values) => {
     try {
+      // const url = `${process.env.NEXT_PUBLIC_API_URI}/login`;
+      // if (values.email && values.password) {
+      //   const { data } = await axios.post(url, values);
+      //
+      //   Cookies.set("token", data.data.access_token);
+      //   Cookies.set("id", data.data.user.id);
+      //
+      //   dispatch(setUser(data.data.user));
+      //
+      //   if (customError) {
+      //     setCustomError("");
+      //   }
+      //
+      //   router.replace("/");
+      // }
+
       const res = await signIn("login", {
         email: values.email,
         password: values.password,

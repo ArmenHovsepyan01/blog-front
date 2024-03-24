@@ -14,13 +14,14 @@ import {
 import ReadMoreIcon from "@mui/icons-material/ReadMore";
 import Link from "next/link";
 
-import { IBlog } from "../../utilis/types/definitions";
-import { getDate } from "../../utilis/getDate";
-import { showLessText } from "../../utilis/showLessText";
+import { IBlog } from "@/utilis/types/definitions";
+import { getDate } from "@/utilis/getDate";
+import { showLessText } from "@/utilis/showLessText";
 import AddToFavorites from "../common/add-to-favorites/AddToFavorites";
-import { calculateReadingTime } from "../../utilis/calculateReadingTime";
+import { calculateReadingTime } from "@/utilis/calculateReadingTime";
 import Settings from "./settings/Settings";
 import { usePathname } from "next/navigation";
+
 import Image from "next/image";
 
 interface IBlogCard {
@@ -100,9 +101,10 @@ const BlogCard: FC<IBlogCard> = ({ blog }) => {
           {pathname === "/my-blog" && (
             <Settings isPublished={blog.isPublished} id={blog.id} />
           )}
+          <AddToFavorites id={blog.id} />
+
           {blog.isPublished && (
             <>
-              <AddToFavorites id={blog.id} />
               <Link href={`/blog/${generateLinkTitle(blog.title)}/${blog.id}`}>
                 <IconButton aria-label="add to favorites">
                   <ReadMoreIcon />

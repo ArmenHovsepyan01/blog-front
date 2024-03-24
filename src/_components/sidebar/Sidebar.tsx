@@ -16,10 +16,9 @@ import {
 import InventoryIcon from "@mui/icons-material/Inventory";
 
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
-import { useAppSelector } from "../../lib/store/hoooks/hooks";
-import FollowersList from "../user-drawer/followers-list/FollowersList";
 import { Box } from "@mui/system";
 import { AccountCircle } from "@mui/icons-material";
+import {useSession} from "next-auth/react";
 
 interface ISidebar {
   handleCategoryChange: (category: number) => void;
@@ -27,8 +26,7 @@ interface ISidebar {
 }
 
 const Sidebar: FC<ISidebar> = ({ handleCategoryChange, selectedCategory }) => {
-  const user = useAppSelector((state) => state.user.user);
-  const status = useAppSelector((state) => state.user.status);
+  const {data: session} = useSession();
 
   const drawerWidth = 380;
 
@@ -54,25 +52,8 @@ const Sidebar: FC<ISidebar> = ({ handleCategoryChange, selectedCategory }) => {
           <Box display={"flex"} alignItems={"center"} gap={2}>
             <AccountCircle fontSize={"large"} />
             <span>
-              {user?.firstName} {user?.lastName}
+              {session?.user?.firstName} {session?.user?.lastName}
             </span>
-          </Box>
-          <Box
-            display={"flex"}
-            gap={3}
-            flexDirection={"column"}
-            sx={{ margin: "16px 0", fontSize: "18px" }}
-          >
-            <FollowersList
-              followers={user?.userFollowers}
-              userName={user?.firstName}
-              title={"Followers"}
-            />
-            <FollowersList
-              followers={user?.userFollowed}
-              userName={user?.firstName}
-              title={"Following"}
-            />
           </Box>
           <List>
             {sidebarItems.map((item, i) => {

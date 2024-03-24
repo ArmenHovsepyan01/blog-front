@@ -1,14 +1,12 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 
 import { Box, AppBar, Toolbar, Typography, TextField } from "@mui/material";
 
 import Avatar from "./avatar/Avatar";
 import Link from "next/link";
-import { getUser } from "@/lib/store/actions/user.actions";
 
-import { useDispatch } from "react-redux";
 const Header = () => {
   return (
     <Box sx={{ flexGrow: 1 }}>
