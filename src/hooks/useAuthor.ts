@@ -7,7 +7,7 @@ export function useAuthor(id?: string) {
   const { data, error, isLoading, mutate } = useSWR(url, fetcher);
 
   return {
-    user: data?.data,
+    user: data,
     isLoading,
     isError: error,
     mutate,

@@ -23,18 +23,7 @@ interface IUser {
 }
 
 const User: FC<IUser> = ({ params: { userId } }) => {
-  const dispatch = useDispatch();
-  const { data: session } = useSession();
-
   const { user, isLoading } = useAuthor(userId);
-  const id = session?.user.id;
-
-  useEffect(() => {
-    if (typeof window !== "undefined" && id) {
-      // @ts-ignore
-      dispatch(getFollowed(id));
-    }
-  }, [id]);
 
   return (
     <>
@@ -49,11 +38,6 @@ const User: FC<IUser> = ({ params: { userId } }) => {
           >
             {user?.blogs?.length > 0 ? (
               user?.blogs?.map((blog: IBlog) => {
-                blog.user = {
-                  firstName: user.firstName,
-                  lastName: user.lastName,
-                };
-
                 return <BlogCard blog={blog} key={blog.id} />;
               })
             ) : (

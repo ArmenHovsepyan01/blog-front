@@ -10,7 +10,7 @@ import {
 
 function* getBlogs(action: any) {
   try {
-    const { page } = action;
+    const page = action?.payload?.page;
 
     yield put(getBlogsRequest());
 

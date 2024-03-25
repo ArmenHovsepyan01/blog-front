@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC } from "react";
+import React, { FC, memo } from "react";
 
 import { Button } from "@mui/material";
 import { useSession } from "next-auth/react";
@@ -8,9 +8,10 @@ import { useRouter } from "next/navigation";
 import { useAppSelector } from "@/lib/store/hoooks/hooks";
 import { useDispatch } from "react-redux";
 import { Follower } from "@/utilis/types/definitions";
-import { follow, unFollow } from "@/lib/store/actions/followed.actions";
+import { follow, unfollow } from "@/lib/store/actions/followed.actions";
 import axios from "axios";
 import { createConfigForRequest } from "@/utilis/createConfigForRequest";
+import { findFollowerById } from "../../lib/store/reducers/followed.reducer";
 
 interface IFollowerButton {
   follower: Follower;
@@ -26,12 +27,12 @@ const FollowButton: FC<IFollowerButton> = ({
   const { status } = useSession();
   const { replace } = useRouter();
 
-  const userFollowed = useAppSelector((state) => state.followed.followed);
   const dispatch = useDispatch();
 
-  const isFollower = userFollowed.find(
-    (item: Follower) => item.id === follower.id,
+  const isFollower = useAppSelector((state) =>
+    findFollowerById(state, follower.id),
   );
+
   const onClick = async () => {
     if (status !== "authenticated") return replace("/login");
 
@@ -47,7 +48,7 @@ const FollowButton: FC<IFollowerButton> = ({
 
       if (isFollower) {
         // @ts-ignore
-        dispatch(unFollow(follower.id));
+        dispatch(unfollow(follower.id));
         if (removeFollower) {
           removeFollower();
         }
@@ -75,4 +76,4 @@ const FollowButton: FC<IFollowerButton> = ({
   );
 };
 
-export default FollowButton;
+export default memo(FollowButton);

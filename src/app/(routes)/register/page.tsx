@@ -18,6 +18,8 @@ import { Box } from "@mui/system";
 
 import axios from "axios";
 
+import { LoadingButton } from "@mui/lab";
+
 const schema = yup
   .object({
     firstName: yup.string().required(),
@@ -56,13 +58,19 @@ const Register = () => {
   });
 
   const [customError, setCustomError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+
   const { replace } = useRouter();
 
   const onSubmit: SubmitHandler<FormData> = async (values) => {
     try {
       const url = `${process.env.NEXT_PUBLIC_API_URI}/register`;
+      setLoading(true);
       const { data } = await axios.post(url, values);
+
+      setLoading(false);
       replace("/login");
+
       if (customError) {
         setCustomError("");
       }
@@ -116,14 +124,15 @@ const Register = () => {
             alignItems={"center"}
             justifyContent={"space-between"}
           >
-            <Button
+            <LoadingButton
               type={"submit"}
               variant={"contained"}
               size={"medium"}
+              loading={loading}
               sx={{ width: 120, textTransform: "capitalize" }}
             >
               Register
-            </Button>
+            </LoadingButton>
 
             <Link href={"/login"}>Log in</Link>
           </Box>

@@ -7,12 +7,12 @@ import { getBlogs } from "@/lib/store/actions/blog.actions";
 import { useAppSelector } from "@/lib/store/hoooks/hooks";
 
 import { Box, Pagination } from "@mui/material";
-import { getLikeBlogs } from "@/lib/store/actions/likedBlogs.actions";
 import { RequestStatus } from "@/utilis/types/enums";
 import { IBlog } from "@/utilis/types/definitions";
 import BlogCard from "@/_components/blog-card/BlogCard";
 import Loading from "@/app/loading";
 import { useSession } from "next-auth/react";
+import { getLikedBlogs } from "../lib/store/actions/likedBlogs.actions";
 
 export default function Home() {
   const { status } = useSession();
@@ -30,12 +30,14 @@ export default function Home() {
   }, [pagesCount, limit]);
 
   useEffect(() => {
+    // @ts-ignore
     dispatch(getBlogs(currentPage));
   }, [dispatch, currentPage]);
 
   useEffect(() => {
     if (status === "authenticated") {
-      dispatch(getLikeBlogs());
+      // @ts-ignore
+      dispatch(getLikedBlogs());
     }
   }, [status]);
 

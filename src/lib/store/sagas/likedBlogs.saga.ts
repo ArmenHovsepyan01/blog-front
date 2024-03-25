@@ -1,7 +1,7 @@
 import { fork, put, takeEvery, call } from "redux-saga/effects";
 
 import {
-  addToLikedBlogs,
+  addLikedBlogs,
   getLikedBlogsRequest,
   LikedBlogsActionTypes,
   setLikedBlogs,
@@ -15,7 +15,7 @@ import { removeLikedBlog } from "../../../utilis/liked-blogs/removeLikedBlog";
 import { getAllLikedBlogs } from "../../../utilis/liked-blogs/getAllLikedBlogs";
 import { ILikedBlog } from "../../../utilis/types/definitions";
 
-function* getLikedBlogs(action: any): Generator<any, void, any> {
+function* getLikedBlogs(): Generator<any, void, any> {
   try {
     yield put(getLikedBlogsRequest());
 
@@ -31,8 +31,8 @@ function* getLikedBlogs(action: any): Generator<any, void, any> {
 function* likeBlog(action: any): Generator<any, void, any> {
   try {
     yield put(getLikedBlogsRequest());
-    const data = yield call(likeBlogs, action.id);
-    yield put(addToLikedBlogs(data.data));
+    const data = yield call(likeBlogs, action.payload.id);
+    yield put(addLikedBlogs(data.data));
   } catch (e) {
     console.error(e);
     yield put(setLikedBlogsError(e));
@@ -42,13 +42,13 @@ function* likeBlog(action: any): Generator<any, void, any> {
 function* removeFromLikedBlogs(action: any): Generator<any, void, any> {
   try {
     yield put(getLikedBlogsRequest());
-    const data = yield call(removeLikedBlog, action.id);
+    const data = yield call(removeLikedBlog, action.payload.id);
     console.log(data);
 
     const filteredData = store
       .getState()
       .likedBlogs.likedBlogs.filter(
-        (item: ILikedBlog) => item.id !== action.id,
+        (item: ILikedBlog) => item.id !== action.payload.id,
       );
 
     yield put(setLikedBlogs(filteredData));

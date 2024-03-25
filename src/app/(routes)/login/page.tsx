@@ -19,6 +19,7 @@ import * as yup from "yup";
 import axios from "axios";
 
 import FormWrapper from "../../../_components/form-wrapper/FormWrapper";
+import { LoadingButton } from "@mui/lab";
 
 const schema = yup
   .object({
@@ -43,36 +44,21 @@ const Login = () => {
     resolver: yupResolver(schema),
   });
 
-  const dispatch = useDispatch();
-
   const [customError, setCustomError] = useState<string>("");
 
+  const [loading, setLoading] = useState<boolean>(false);
+
   const router = useRouter();
-  const { data } = useSession();
 
   const onSubmit: SubmitHandler<FormData> = async (values) => {
     try {
-      // const url = `${process.env.NEXT_PUBLIC_API_URI}/login`;
-      // if (values.email && values.password) {
-      //   const { data } = await axios.post(url, values);
-      //
-      //   Cookies.set("token", data.data.access_token);
-      //   Cookies.set("id", data.data.user.id);
-      //
-      //   dispatch(setUser(data.data.user));
-      //
-      //   if (customError) {
-      //     setCustomError("");
-      //   }
-      //
-      //   router.replace("/");
-      // }
-
+      setLoading(true);
       const res = await signIn("login", {
         email: values.email,
         password: values.password,
         redirect: false,
       });
+      setLoading(false);
 
       if (res?.error && !res?.ok) {
         if (res.error.toLowerCase().includes("password")) {
@@ -144,14 +130,15 @@ const Login = () => {
             justifyContent={"space-between"}
             alignItems={"center"}
           >
-            <Button
+            <LoadingButton
               type={"submit"}
               variant={"contained"}
               size={"medium"}
+              loading={loading}
               sx={{ width: 120, textTransform: "capitalize" }}
             >
               Log in
-            </Button>
+            </LoadingButton>
 
             <Link href={"/register"}>Reigster now</Link>
           </Box>

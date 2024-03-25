@@ -1,6 +1,8 @@
 import { UserBlogsAction } from "../actions/userBlogs.action";
 import { RequestStatus } from "@/utilis/types/enums";
 import { IBlog } from "@/utilis/types/definitions";
+import { AppStore } from "./index";
+import { createSelector } from "reselect";
 
 interface IAction {
   type: UserBlogsAction;
@@ -71,3 +73,13 @@ export default function userBlogsReducer(
       return state;
   }
 }
+
+const blogs = (state: AppStore) => state.userBlogs.blogs;
+
+export const getPublishedBlogs = createSelector([blogs], (blogs) => {
+  return blogs.filter((item: IBlog) => item.isPublished);
+});
+
+export const getUnpublishedBlogs = createSelector([blogs], (blogs) => {
+  return blogs.filter((item: IBlog) => !item.isPublished);
+});

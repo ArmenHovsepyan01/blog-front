@@ -7,7 +7,7 @@ export function useUserFollowers(id?: string) {
   const { data, error, isLoading, mutate } = useSWR(url, fetcher);
 
   return {
-    followers: data?.data,
+    followers: data,
     isLoading,
     isError: error,
     mutate,

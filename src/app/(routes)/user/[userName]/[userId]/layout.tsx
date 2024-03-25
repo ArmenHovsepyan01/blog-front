@@ -57,7 +57,7 @@ export default function Layout({
         gap={2}
         flexDirection={"column"}
       >
-        <AuthorTitle followers={!!followers} followings={!!followings} />
+        <AuthorTitle />
         {pathname.endsWith("/followers")
           ? followers
           : pathname.endsWith("/followings")

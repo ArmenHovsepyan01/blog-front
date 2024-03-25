@@ -5,12 +5,7 @@ import { Divider, Typography } from "@mui/material";
 import { useAuthor } from "../../hooks/useAuthor";
 import { useParams } from "next/navigation";
 
-interface IAuthorTitle {
-  followers?: boolean;
-  followings?: boolean;
-}
-
-const AuthorTitle: FC<IAuthorTitle> = ({ followings, followers }) => {
+const AuthorTitle = () => {
   const params = useParams<{ userName: string; userId: string }>();
   const { user } = useAuthor(params.userId);
 

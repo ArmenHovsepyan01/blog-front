@@ -1,12 +1,21 @@
-import { createAction, createActions } from "redux-actions";
+import { createActions } from "redux-actions";
 import { Follower } from "@/utilis/types/definitions";
 
-export const getFollowedRequest = createAction("GET_FOLLOWED_REQUEST");
-export const getFollowed = createAction<number>("GET_FOLLOWED");
-export const setFollowed = createAction<Follower[]>("SET_FOLLOWED");
-export const setFollowedError = createAction<any>("SET_FOLLOWED_ERROR");
-export const follow = createAction<Follower>("FOLLOW");
-export const unFollow = createAction<number>("UNFOLLOW");
+export const {
+  follow,
+  unfollow,
+  getFollowedRequest,
+  getFollowed,
+  setFollowed,
+  setFollowedError,
+} = createActions({
+  FOLLOW: (follower: Follower) => ({ follower }),
+  UNFOLLOW: (id: number) => ({ id }),
+  GET_FOLLOWED_REQUEST: () => ({}),
+  GET_FOLLOWED: (id: number) => ({ id }),
+  SET_FOLLOWED: (followers: Follower[]) => ({ followers }),
+  SET_FOLLOWED_ERROR: (error: any) => ({ error }),
+});
 
 export enum FollowedActionsType {
   GET_FOLLOWED_REQUEST = "GET_FOLLOWED_REQUEST",

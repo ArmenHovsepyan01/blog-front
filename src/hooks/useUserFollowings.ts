@@ -7,7 +7,7 @@ export function useUserFollowings(id?: string) {
   const { data, error, isLoading, mutate } = useSWR(url, fetcher);
 
   return {
-    followings: data?.data,
+    followings: data,
     isLoading,
     isError: error,
     mutate,

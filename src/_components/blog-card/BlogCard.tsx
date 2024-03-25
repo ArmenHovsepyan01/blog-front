@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC, useState } from "react";
+import React, { FC, memo, useState } from "react";
 import {
   Box,
   Card,
@@ -98,13 +98,13 @@ const BlogCard: FC<IBlogCard> = ({ blog }) => {
           </Box>
         </Link>
         <CardActions sx={{ justifyContent: "end" }}>
-          {pathname === "/my-blog" && (
+          {pathname.includes("/my-blog") && (
             <Settings isPublished={blog.isPublished} id={blog.id} />
           )}
-          <AddToFavorites id={blog.id} />
 
           {blog.isPublished && (
             <>
+              <AddToFavorites id={blog.id} />
               <Link href={`/blog/${generateLinkTitle(blog.title)}/${blog.id}`}>
                 <IconButton aria-label="add to favorites">
                   <ReadMoreIcon />
@@ -118,4 +118,4 @@ const BlogCard: FC<IBlogCard> = ({ blog }) => {
   );
 };
 
-export default BlogCard;
+export default memo(BlogCard);

@@ -23,6 +23,7 @@ const initialState: IInitialState = {
 export default function blogReducer(state = initialState, action: BlogAction) {
   switch (action.type) {
     case BlogActionsTypes.SET_BLOGS:
+      console.log(action);
       return {
         ...state,
         blogs: action.payload.blogs,

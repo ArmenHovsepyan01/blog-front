@@ -9,7 +9,7 @@ import axios from "axios";
 
 function* getFollowed(action: any) {
   try {
-    const id = action?.payload;
+    const id = action?.payload.id;
     yield put(getFollowedRequest());
 
     const { data } = yield call(

@@ -1,4 +1,5 @@
 import { IBlog } from "../../../utilis/types/definitions";
+import { createActions } from "redux-actions";
 
 export enum BlogActionsTypes {
   GET_BLOGS = "GET_BLOGS",
@@ -8,30 +9,11 @@ export enum BlogActionsTypes {
   ADD_BLOG = "ADD_BLOG",
 }
 
-export const getBlogs = (page: number) => ({
-  type: BlogActionsTypes.GET_BLOGS,
-  page,
-});
-
-export const setBlogs = (blogs: IBlog[], count: number) => ({
-  type: BlogActionsTypes.SET_BLOGS,
-  payload: {
-    blogs,
-    count,
-  },
-});
-
-export const getBlogsRequest = () => ({
-  type: BlogActionsTypes.GET_BLOGS_REQUEST,
-});
-
-export const setBlogsError = () => ({
-  type: BlogActionsTypes.SET_BLOGS_ERROR,
-});
-
-export const addBlog = (blog: IBlog) => ({
-  type: BlogActionsTypes.ADD_BLOG,
-  payload: {
-    blog,
-  },
-});
+export const { getBlogs, setBlogs, getBlogsRequest, setBlogsError, addBlog } =
+  createActions({
+    GET_BLOGS: (page: number) => ({ page }),
+    SET_BLOGS: (blogs: IBlog[], count: number) => ({ blogs, count }),
+    GET_BLOGS_REQUEST: () => ({}),
+    SET_BLOGS_ERROR: () => ({}),
+    ADD_BLOG: (blog: IBlog) => ({ blog }),
+  });

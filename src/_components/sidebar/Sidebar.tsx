@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC } from "react";
+import React, { memo, useEffect } from "react";
 
 import {
   Drawer,
@@ -16,21 +16,32 @@ import {
 import InventoryIcon from "@mui/icons-material/Inventory";
 
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
-import { Box } from "@mui/system";
-import { AccountCircle } from "@mui/icons-material";
-import {useSession} from "next-auth/react";
 
-interface ISidebar {
-  handleCategoryChange: (category: number) => void;
-  selectedCategory: number;
-}
+import UserInfo from "../user-info/UserInfo";
+import Link from "next/link";
 
-const Sidebar: FC<ISidebar> = ({ handleCategoryChange, selectedCategory }) => {
-  const {data: session} = useSession();
+import { useSession } from "next-auth/react";
+import { getUserBlogs } from "../../lib/store/actions/userBlogs.action";
+
+import { useDispatch } from "react-redux";
+import { usePathname } from "next/navigation";
+
+const Sidebar = () => {
+  const dispatch = useDispatch();
+  const pathname = usePathname();
 
   const drawerWidth = 380;
 
   const sidebarItems = ["Published", "Unpublished", "Create"];
+
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (session?.user?.access_token) {
+      // @ts-ignore
+      dispatch(getUserBlogs(session?.user.access_token));
+    }
+  }, [session]);
 
   return (
     <Drawer
@@ -49,36 +60,32 @@ const Sidebar: FC<ISidebar> = ({ handleCategoryChange, selectedCategory }) => {
     >
       <Toolbar sx={{ width: "100%", padding: "24px 0" }}>
         <Typography variant="h6" noWrap component="div" width={"100%"}>
-          <Box display={"flex"} alignItems={"center"} gap={2}>
-            <AccountCircle fontSize={"large"} />
-            <span>
-              {session?.user?.firstName} {session?.user?.lastName}
-            </span>
-          </Box>
+          <UserInfo />
           <List>
             {sidebarItems.map((item, i) => {
               return (
-                <ListItem
-                  disablePadding
-                  key={i}
-                  onClick={() => handleCategoryChange(i)}
-                  sx={{
-                    backgroundColor:
-                      selectedCategory === i ? "#dedede" : "transparent",
-                    width: "100%",
-                  }}
-                >
-                  <ListItemButton>
-                    <ListItemIcon>
-                      {i === 0 || i === 1 ? (
-                        <InventoryIcon />
-                      ) : (
-                        <DriveFileRenameOutlineIcon />
-                      )}
-                    </ListItemIcon>
-                    <ListItemText primary={item} />
-                  </ListItemButton>
-                </ListItem>
+                <Link href={`/my-blog/${item.toLowerCase()}`} key={i}>
+                  <ListItem
+                    disablePadding
+                    sx={{
+                      backgroundColor:
+                        pathname.split("/my-blog/")[1] === item.toLowerCase()
+                          ? "#dedede"
+                          : "transparent",
+                    }}
+                  >
+                    <ListItemButton>
+                      <ListItemIcon>
+                        {i === 0 || i === 1 ? (
+                          <InventoryIcon />
+                        ) : (
+                          <DriveFileRenameOutlineIcon />
+                        )}
+                      </ListItemIcon>
+                      <ListItemText primary={item} />
+                    </ListItemButton>
+                  </ListItem>
+                </Link>
               );
             })}
           </List>
@@ -88,4 +95,4 @@ const Sidebar: FC<ISidebar> = ({ handleCategoryChange, selectedCategory }) => {
   );
 };
 
-export default Sidebar;
+export default memo(Sidebar);

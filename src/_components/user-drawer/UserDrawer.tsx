@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { memo, useCallback, useEffect, useMemo } from "react";
 
 import { Box, Drawer, Typography } from "@mui/material";
 
@@ -10,6 +10,8 @@ import Link from "next/link";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useSession } from "next-auth/react";
 import FollowButton from "@/_components/follow-button/FollowButton";
+import { useDispatch } from "react-redux";
+import { getFollowed } from "@/lib/store/actions/followed.actions";
 
 const UserDrawer = () => {
   const params = useParams<{ userName: string; userId: string }>();
@@ -18,15 +20,27 @@ const UserDrawer = () => {
   const { user, isLoading, mutate } = useAuthor(userId);
   const { data: session } = useSession();
 
+  const dispatch = useDispatch();
+  const id = session?.user.id;
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && id) {
+      // @ts-ignore
+      dispatch(getFollowed(id));
+    }
+  }, [id]);
+
   const drawerWidth = 380;
 
-  const userInfo = {
-    id: user?.id,
-    firstName: user?.firstName,
-    lastName: user?.lastName,
-  };
+  const userInfo = useMemo(() => {
+    return {
+      id: user?.id,
+      firstName: user?.firstName,
+      lastName: user?.lastName,
+    };
+  }, [user]);
 
-  const addFollower = async () => {
+  const addFollower = useCallback(async () => {
     const follower = {
       id: session?.user.id,
       firstName: session?.user.firstName,
@@ -39,9 +53,9 @@ const UserDrawer = () => {
         userFollowers: [...user.userFollowers, follower],
       },
     });
-  };
+  }, [user, session]);
 
-  const removeFollower = async () => {
+  const removeFollower = useCallback(async () => {
     await mutate({
       data: {
         ...user,
@@ -52,7 +66,15 @@ const UserDrawer = () => {
         ],
       },
     });
-  };
+  }, [user, session]);
+
+  const followers = useMemo(() => {
+    return user?.userFollowers?.length;
+  }, [user?.userFollowers]);
+
+  const followings = useMemo(() => {
+    return user?.userFollowed?.length;
+  }, [user?.userFollowed]);
 
   return (
     <Drawer
@@ -84,14 +106,12 @@ const UserDrawer = () => {
           </Typography>
           <Link href={`/user/${params.userName}/${params.userId}/followers`}>
             <span>
-              {user?.userFollowers?.length}{" "}
-              {user?.userFollowers?.length > 1 ? "Followers" : "Follower"}
+              {followers} {followers > 1 ? "Followers" : "Follower"}
             </span>
           </Link>
           <Link href={`/user/${params.userName}/${params.userId}/followings`}>
             <span>
-              {user?.userFollowed?.length}{" "}
-              {user?.userFollowed?.length > 1 ? "Followings" : "Following"}
+              {followings} {followings > 1 ? "Followings" : "Following"}
             </span>
           </Link>
           {!isLoading && session?.user.id !== user.id && (
@@ -107,4 +127,4 @@ const UserDrawer = () => {
   );
 };
 
-export default UserDrawer;
+export default memo(UserDrawer);

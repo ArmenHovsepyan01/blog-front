@@ -5,16 +5,13 @@ export default withAuth(
   async function middleware(req) {
     const { pathname, searchParams } = req.nextUrl;
 
-    // if (
-    //   pathname ===
-    //   `/user/@${(req.nextauth.token?.firstName as string).toLowerCase()}/${req.nextauth.token?.id}`
-    // ) {
-    //   return NextResponse.redirect(new URL("/my-blog", req.url));
-    // }
-
     if (pathname === "/change-password") {
       const code = new URLSearchParams(searchParams).get("code");
       if (!code) return NextResponse.redirect(new URL("/", req.url));
+    }
+
+    if (pathname === "/my-blog") {
+      return NextResponse.redirect(new URL("/my-blog/published", req.url));
     }
   },
   {

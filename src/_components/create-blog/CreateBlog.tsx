@@ -10,10 +10,9 @@ import Textarea from "@mui/joy/Textarea";
 import Upload from "@/_components/upload/Upload";
 import { useDispatch } from "react-redux";
 import {
-  addBlogToUserBlogs,
+  addUserBlog,
   updateUserBlog,
 } from "../../lib/store/actions/userBlogs.action";
-import { useAppSelector } from "../../lib/store/hoooks/hooks";
 import { IBlog } from "../../utilis/types/definitions";
 import { useRouter } from "next/navigation";
 
@@ -29,10 +28,9 @@ type FormData = yup.InferType<typeof schema>;
 
 interface ICreateBlog {
   blog?: IBlog;
-  handleCategoryChange?: (id: number) => void;
 }
 
-const CreateBlog: FC<ICreateBlog> = ({ blog, handleCategoryChange }) => {
+const CreateBlog: FC<ICreateBlog> = ({ blog }) => {
   const router = useRouter();
 
   const {
@@ -66,15 +64,17 @@ const CreateBlog: FC<ICreateBlog> = ({ blog, handleCategoryChange }) => {
         }
       }
 
+      console.log("update");
       if (blog) {
+        // @ts-ignore
         dispatch(updateUserBlog(blog.id, formData));
-        router.replace("/my-blog");
+        router.replace(
+          `/my-blog/${blog.isPublished ? "published" : "unpublished"}`,
+        );
       } else {
-        dispatch(addBlogToUserBlogs(formData));
-      }
-
-      if (handleCategoryChange) {
-        handleCategoryChange(1);
+        // @ts-ignore
+        dispatch(addUserBlog(formData));
+        router.replace("/my-blog/unpublished");
       }
     } catch (e: any) {
       console.error("Error submitting form:", e);
