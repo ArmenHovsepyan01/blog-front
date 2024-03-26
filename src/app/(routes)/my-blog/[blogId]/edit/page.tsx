@@ -25,9 +25,9 @@ const Edit: FC<IEdit> = async ({ params: { blogId } }) => {
     <main>
       <Box display={"flex"} gap={2} flexDirection={"column"}>
         <Typography variant={"h5"} color={"black"}>
-          Editing <i style={{ color: "gray" }}>{data.blog.title}</i>
+          Editing <i style={{ color: "gray" }}>{data.data.title}</i>
         </Typography>
-        <CreateBlog blog={data.blog} />
+        <CreateBlog blog={data.data} />
       </Box>
     </main>
   );

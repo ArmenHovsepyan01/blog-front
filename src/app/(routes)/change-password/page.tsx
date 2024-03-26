@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
-import { Box, Button, TextField } from "@mui/material";
+import { Box, TextField } from "@mui/material";
 import * as yup from "yup";
 
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -18,6 +18,7 @@ import { createConfigForRequest } from "../../../utilis/createConfigForRequest";
 import Notification from "../../../_components/notification/Notification";
 
 import FormWrapper from "@/_components/form-wrapper/FormWrapper";
+import { LoadingButton } from "@mui/lab";
 
 const schema = yup
   .object({
@@ -35,8 +36,11 @@ const Page = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const code = searchParams.get("code");
+
   const [customError, setCustomError] = useState<string>("");
   const [message, setMessage] = useState<string>("");
+
+  const [loading, setLoading] = useState<boolean>(false);
 
   const {
     control,
@@ -52,20 +56,26 @@ const Page = () => {
 
   const onSubmit: SubmitHandler<FormData> = async (values) => {
     try {
-      const config = createConfigForRequest();
+      const config = await createConfigForRequest();
       const body = {
         password: values.newPassword,
       };
 
+      setLoading(true);
       const { data } = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URI}/change-password?code=${code}`,
         body,
         config,
       );
 
+      setLoading(false);
+
       setMessage(data.message);
     } catch (e: any) {
       console.error(e.response.data.error.message);
+      if (loading) {
+        setLoading(false);
+      }
       setCustomError(e.response.data.error.message);
     }
   };
@@ -123,13 +133,14 @@ const Page = () => {
               }}
             />
             {customError && <span style={{ color: "red" }}>{customError}</span>}
-            <Button
+            <LoadingButton
               type={"submit"}
               variant={"contained"}
               sx={{ textTransform: "capitalize" }}
+              loading={!!loading}
             >
               change password
-            </Button>
+            </LoadingButton>
           </Box>
         </form>
       </FormWrapper>

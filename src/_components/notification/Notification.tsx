@@ -7,9 +7,15 @@ interface INotification {
   message: string;
   isOpen: boolean;
   handleClose: () => void;
+  type: string;
 }
 
-const Notification: FC<INotification> = ({ message, isOpen, handleClose }) => {
+const Notification: FC<INotification> = ({
+  message,
+  isOpen,
+  handleClose,
+  type,
+}) => {
   return (
     <Snackbar
       open={isOpen}
@@ -19,7 +25,8 @@ const Notification: FC<INotification> = ({ message, isOpen, handleClose }) => {
     >
       <Alert
         onClose={handleClose}
-        severity="success"
+        //@ts-ignore
+        severity={type}
         variant="filled"
         sx={{ width: "100%" }}
       >

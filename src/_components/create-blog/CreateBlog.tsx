@@ -8,12 +8,16 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import Textarea from "@mui/joy/Textarea";
 
 import Upload from "@/_components/upload/Upload";
+
 import { useDispatch } from "react-redux";
+
 import {
   addUserBlog,
   updateUserBlog,
 } from "../../lib/store/actions/userBlogs.action";
+
 import { IBlog } from "../../utilis/types/definitions";
+
 import { useRouter } from "next/navigation";
 
 const schema = yup
@@ -42,7 +46,7 @@ const CreateBlog: FC<ICreateBlog> = ({ blog }) => {
     defaultValues: {
       title: blog ? blog.title : "",
       content: blog ? blog.content : "",
-      image: blog ? blog.imageUrl : "",
+      image: blog ? blog?.imageUrl : "",
     },
     resolver: yupResolver(schema),
   });
@@ -57,6 +61,8 @@ const CreateBlog: FC<ICreateBlog> = ({ blog }) => {
         if (key === "image") {
           if (image) {
             formData.append(key, image, image.name);
+          } else {
+            console.log("there is nothing");
           }
         } else {
           //   @ts-ignore
@@ -64,7 +70,6 @@ const CreateBlog: FC<ICreateBlog> = ({ blog }) => {
         }
       }
 
-      console.log("update");
       if (blog) {
         // @ts-ignore
         dispatch(updateUserBlog(blog.id, formData));

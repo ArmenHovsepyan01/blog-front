@@ -8,8 +8,6 @@ export const deleteBlogById = async (id: number) => {
 
     const { data } = await axios.delete(url, config);
 
-    console.log(data);
-
     return data;
   } catch (e: any) {
     throw new Error(e);

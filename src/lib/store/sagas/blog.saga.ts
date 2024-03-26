@@ -19,7 +19,7 @@ function* getBlogs(action: any) {
       `http://localhost:5000/blogs?page=${page}&limit=2`,
     );
 
-    yield put(setBlogs(data.blogs, data.count));
+    yield put(setBlogs(data.data, data.count));
   } catch (e) {
     yield put(setBlogsError());
   }

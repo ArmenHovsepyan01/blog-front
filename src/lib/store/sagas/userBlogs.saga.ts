@@ -19,8 +19,6 @@ import { createBlog } from "../../../utilis/user-blogs-helpers/addBlog";
 
 function* getBlogs(action: any): Generator<any, void, any> {
   try {
-    const token = action.payload.token;
-
     yield put(getUserBlogsRequest());
     const data: IBlog[] = yield call(getUserBlogs);
 

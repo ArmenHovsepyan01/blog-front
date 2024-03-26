@@ -11,6 +11,7 @@ import Header from "../_components/header/Header";
 import ReduxProvider from "../../Provider";
 import { getServerSession } from "next-auth";
 import SessionProvider from "../../SessionProvider";
+import { ReactNode } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   const session = await getServerSession();
 

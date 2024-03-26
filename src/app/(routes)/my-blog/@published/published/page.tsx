@@ -28,7 +28,9 @@ const Page = () => {
           blogs.length > 0 ? (
             blogs.map((blog: IBlog) => <BlogCard blog={blog} key={blog.id} />)
           ) : (
-            <span>There is no published blogs yet</span>
+            <span style={{ textAlign: "center" }}>
+              There is no published blogs yet.
+            </span>
           )
         ) : (
           <Loading />

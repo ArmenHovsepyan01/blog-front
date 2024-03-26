@@ -8,8 +8,7 @@ export async function createBlog(values: any) {
 
     const { data } = await axios.post(url, values, config);
 
-    console.log(data);
-    return data.blog;
+    return data.data;
   } catch (e: any) {
     throw new Error(e);
   }

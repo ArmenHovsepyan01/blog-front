@@ -37,7 +37,7 @@ const BlogCard: FC<IBlogCard> = ({ blog }) => {
 
   const generateLinkTitle = (title?: string) => {
     if (!title) return "";
-    return `@${title.toLowerCase().split(" ").join("-")}`;
+    return `${title.toLowerCase().split(" ").join("-")}`;
   };
 
   return (
@@ -63,8 +63,7 @@ const BlogCard: FC<IBlogCard> = ({ blog }) => {
             }}
             fill
             sizes="(max-width: 700px) 400px"
-            priority={true}
-            quality={100}
+            loading={"lazy"}
           />
         </CardMedia>
       </Link>

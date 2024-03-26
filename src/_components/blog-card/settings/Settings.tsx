@@ -32,6 +32,7 @@ const Settings: FC<ISettings> = ({ isPublished, id }) => {
   };
 
   const deleteBlog = async () => {
+    // @ts-ignore
     dispatch(deleteUserBlog(id));
     closeModal();
   };
@@ -41,6 +42,7 @@ const Settings: FC<ISettings> = ({ isPublished, id }) => {
       isPublished: true,
     };
 
+    // @ts-ignore
     dispatch(updateUserBlog(id, values));
   };
 
@@ -62,11 +64,11 @@ const Settings: FC<ISettings> = ({ isPublished, id }) => {
         )}
 
         <Tooltip title={"Edit blog"}>
-          <Link href={`/my-blog/${id}/edit`}>
+          <a href={`/my-blog/${id}/edit`}>
             <IconButton>
               <Edit />
             </IconButton>
-          </Link>
+          </a>
         </Tooltip>
       </Box>
       <Modal

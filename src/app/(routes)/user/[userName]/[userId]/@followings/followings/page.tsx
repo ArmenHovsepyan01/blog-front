@@ -17,8 +17,10 @@ interface Props {
 }
 
 const Page: FC<Props> = ({ params: { userId } }) => {
-  const { followings, isReachedEnd, isLoadingMore, setSize, size } =
-    usePagination<Follower>("http://localhost:5000/followings", userId, 4);
+  const { followings, isReachedEnd, setSize, size } = usePagination<Follower>(
+    `http://localhost:5000/followings/${userId}`,
+    4,
+  );
 
   return (
     <Box
@@ -31,7 +33,9 @@ const Page: FC<Props> = ({ params: { userId } }) => {
         next={() => setSize(size + 1)}
         loader={<CircularProgress />}
         hasMore={!isReachedEnd}
-        // endMessage={<span>There is no followings</span>}
+        endMessage={
+          followings?.length === 0 && <span>Followings list is empty.</span>
+        }
         dataLength={followings?.length ?? 0}
         scrollableTarget={"scrollableDiv"}
         style={{

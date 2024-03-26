@@ -12,7 +12,7 @@ import * as yup from "yup";
 
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
-import { TextField, Button, Link } from "@mui/material";
+import { TextField, Link } from "@mui/material";
 
 import { Box } from "@mui/system";
 
@@ -66,7 +66,7 @@ const Register = () => {
     try {
       const url = `${process.env.NEXT_PUBLIC_API_URI}/register`;
       setLoading(true);
-      const { data } = await axios.post(url, values);
+      await axios.post(url, values);
 
       setLoading(false);
       replace("/login");

@@ -12,10 +12,11 @@ import BlogCard from "../../../_components/blog-card/BlogCard";
 
 import { ILikedBlog } from "@/utilis/types/definitions";
 import { RequestStatus } from "@/utilis/types/enums";
-import { getLikeBlogs } from "@/lib/store/actions/likedBlogs.actions";
+import { getLikedBlogs } from "@/lib/store/actions/likedBlogs.actions";
 
 import Loading from "@/app/loading";
 import { useSession } from "next-auth/react";
+import GoBack from "../../../_components/go-back/GoBack";
 
 const LikedBlogs = () => {
   const { likedBlogs, status: likedBlogsStatus } = useAppSelector(
@@ -31,15 +32,19 @@ const LikedBlogs = () => {
       status === "authenticated" &&
       likedBlogsStatus !== RequestStatus.SUCCESS
     ) {
-      dispatch(getLikeBlogs());
+      // @ts-ignore
+      dispatch(getLikedBlogs());
     }
   }, [status]);
 
   return (
     <main>
-      <Typography fontSize={28} margin={0}>
-        Liked Blogs
-      </Typography>
+      <Box display={"flex"} alignItems={"center"} gap={3}>
+        <GoBack />
+        <Typography fontSize={28} margin={0}>
+          Liked Blogs
+        </Typography>
+      </Box>
       <Divider variant={"fullWidth"} sx={{ margin: "18px 0" }} />
       <Box
         display={"flex"}

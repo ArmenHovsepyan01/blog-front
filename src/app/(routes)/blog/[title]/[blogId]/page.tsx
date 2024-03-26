@@ -1,21 +1,28 @@
 "use server";
 
 import React, { FC, Suspense } from "react";
+
 import axios from "axios";
+
 import { IBlog } from "../../../../../utilis/types/definitions";
+
 import { Box, Avatar, Typography, IconButton } from "@mui/material";
+
 import { getDate } from "../../../../../utilis/getDate";
-import Image from "next/image";
-import FavoriteIcon from "@mui/icons-material/Favorite";
+
 import TwitterIcon from "@mui/icons-material/Twitter";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
-import Link from "next/link";
-import store from "../../../../../lib/store/store";
+
 import ImageWithFallback from "../../../../../_components/image-with-fallback/ImageWithFallback";
 import AddToFavorites from "../../../../../_components/common/add-to-favorites/AddToFavorites";
+
 import Loading from "./loading";
+
 import { calculateReadingTime } from "../../../../../utilis/calculateReadingTime";
+
+import { Metadata, ResolvedMetadata } from "next";
+import GoBack from "../../../../../_components/go-back/GoBack";
 
 interface BlogProps {
   params: {
@@ -23,13 +30,44 @@ interface BlogProps {
   };
 }
 
+interface Props {
+  params: { blogId: string };
+}
+
+export const generateMetadata = async (
+  { params }: Props,
+  parent: ResolvedMetadata,
+): Promise<Metadata> => {
+  const blog = await getBlog(params.blogId);
+  const previousImages = (await parent).openGraph?.images || [];
+
+  const title = blog.title;
+  const description = blog.content;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title: blog.title,
+      description: blog.content,
+      type: "article",
+      authors: [`${blog.user.firstName}`],
+      publishedTime: `${blog.createdAt}`,
+      images: [
+        `${process.env.NEXT_PUBLIC_API_URI}/api/images${blog.imageUrl}`,
+        ...previousImages,
+      ],
+    },
+  };
+};
+
 async function getBlog(id: string) {
   try {
     const { data } = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URI}/blog/${id}`,
     );
 
-    return data.blog;
+    return data.data;
   } catch (e: any) {
     throw new Error(e);
   }
@@ -40,9 +78,15 @@ const Blog: FC<BlogProps> = async ({ params: { blogId } }) => {
 
   return (
     <main>
+      <GoBack />
       <Suspense fallback={<Loading />}>
         <Box
-          sx={{ border: "solid 1px gray", borderRadius: 2, minHeight: 200 }}
+          sx={{
+            border: "solid 1px gray",
+            borderRadius: 2,
+            minHeight: 200,
+            marginTop: 3,
+          }}
           padding={4}
           display={"flex"}
           flexDirection={"column"}
@@ -56,10 +100,10 @@ const Blog: FC<BlogProps> = async ({ params: { blogId } }) => {
             <Box display={"flex"} gap={2} alignItems={"center"}>
               <Avatar />
               <span>{`${blog?.user?.firstName} ${blog?.user?.lastName}`}</span>
-              <span>{getDate(blog.createdAt)}</span>
+              <span>{getDate(blog?.createdAt)}</span>
               <span>{calculateReadingTime(blog.content)} min read</span>
             </Box>
-            <AddToFavorites id={+blogId} />
+            <AddToFavorites id={+blog.id} />
           </Box>
 
           <Box sx={{ width: "100%", height: 500, position: "relative" }}>

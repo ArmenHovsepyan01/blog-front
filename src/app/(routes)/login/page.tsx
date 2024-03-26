@@ -2,21 +2,17 @@
 
 import React, { useState } from "react";
 
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 
-import { Button, Link, TextField, Box } from "@mui/material";
+import { Link, TextField, Box } from "@mui/material";
 
 import { useRouter } from "next/navigation";
-
-import { useDispatch } from "react-redux";
 
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import * as yup from "yup";
-
-import axios from "axios";
 
 import FormWrapper from "../../../_components/form-wrapper/FormWrapper";
 import { LoadingButton } from "@mui/lab";

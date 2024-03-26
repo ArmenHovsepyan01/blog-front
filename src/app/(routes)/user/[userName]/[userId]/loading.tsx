@@ -7,7 +7,7 @@ const Loading = () => {
     <Box
       sx={{
         margin: "auto",
-        maxWidth: "1200px",
+        width: "1200px",
         minHeight: 500,
         position: "relative",
       }}
@@ -18,11 +18,11 @@ const Loading = () => {
         gap={2}
         flexDirection={"column"}
       >
-        <Typography variant={"h4"} sx={{ marginTop: 8 }}>
-          <Skeleton variant="text" sx={{ fontSize: "3rem" }} width={100} />
-        </Typography>
+        {/*<Typography variant={"h4"} sx={{ marginTop: 8 }}>*/}
+        {/*  <Skeleton variant="text" sx={{ fontSize: "3rem" }} width={100} />*/}
+        {/*</Typography>*/}
 
-        <Divider />
+        {/*<Divider />*/}
         <Box
           display={"flex"}
           gap={2}

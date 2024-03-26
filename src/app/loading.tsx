@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Skeleton, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import BlogCardSkeleton from "@/_components/blog-card/blog-card-skeleton/BlogCardSkeleton";
 
 const Loading = () => {

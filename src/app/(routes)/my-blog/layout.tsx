@@ -1,36 +1,27 @@
 "use client";
 
 import { Box } from "@mui/material";
-import React from "react";
+import React, { ReactNode } from "react";
 import Sidebar from "@/_components/sidebar/Sidebar";
 import { usePathname } from "next/navigation";
 
-// export const generateMetadata = (route: Props) => {
-//   const { params } = route;
-//
-//   const title = params?.userName
-//     ? `Author: ${params.userName}`
-//     : "Node Blogs with Next.js";
-//   const description =
-//     "A blog built with Next.js and featuring Node.js content.";
-//
-//   return {
-//     title,
-//     description,
-//   };
-// };
+type Props = {
+  children: ReactNode;
+  create: ReactNode;
+  published: ReactNode;
+  unpublished: ReactNode;
+  followers: ReactNode;
+  followings: ReactNode;
+};
 
 export default function Layout({
   children,
   create,
   published,
   unpublished,
-}: {
-  children: React.ReactNode;
-  create: React.ReactNode;
-  published: React.ReactNode;
-  unpublished: React.ReactNode;
-}) {
+  followers,
+  followings,
+}: Props) {
   const pathname = usePathname();
 
   return (
@@ -52,7 +43,11 @@ export default function Layout({
             ? unpublished
             : pathname.endsWith("/published")
               ? published
-              : children}
+              : pathname.endsWith("/followers")
+                ? followers
+                : pathname.endsWith("/followings")
+                  ? followings
+                  : children}
       </Box>
     </Box>
   );

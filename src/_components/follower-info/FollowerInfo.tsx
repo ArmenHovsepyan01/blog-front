@@ -37,7 +37,7 @@ const FollowerInfo: FC<IFollower> = ({ follower }) => {
       <>
         <Box display={"flex"} alignItems={"center"} gap={2}>
           <AccountCircleIcon />
-          <Link href={`/user/${follower.id}`}>
+          <Link href={`/user/@${follower.firstName}/${follower.id}`}>
             <span>{`${follower.firstName} ${follower?.lastName}`}</span>
           </Link>
         </Box>

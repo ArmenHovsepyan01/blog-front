@@ -14,7 +14,7 @@ export const updateBlogById = async (values: any, id: number) => {
 
     const { data } = await axios.post(url, values, config);
 
-    return data.blog;
+    return data.data;
   } catch (e: any) {
     throw new Error(e);
   }

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { useDispatch } from "react-redux";
 import { getBlogs } from "@/lib/store/actions/blog.actions";
@@ -15,12 +15,12 @@ import { useSession } from "next-auth/react";
 import { getLikedBlogs } from "../lib/store/actions/likedBlogs.actions";
 
 export default function Home() {
-  const { status } = useSession();
+  const { status, data } = useSession();
 
   const dispatch = useDispatch();
   const loading = useAppSelector((state) => state.blog.status);
 
-  const { blogs, pagesCount, error } = useAppSelector((state) => state.blog);
+  const { blogs, pagesCount } = useAppSelector((state) => state.blog);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const limit = 2;

@@ -2,14 +2,15 @@
 
 import React, { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { AlertTitle, Alert, Box, Button, TextField } from "@mui/material";
+import { Box, TextField } from "@mui/material";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import axios from "axios";
-import Snackbar from "@mui/material/Snackbar";
 import Notification from "../../../_components/notification/Notification";
 import FormWrapper from "../../../_components/form-wrapper/FormWrapper";
+import { LoadingButton } from "@mui/lab";
+import GoBack from "@/_components/go-back/GoBack";
 
 const schema = yup
   .object({
@@ -21,6 +22,8 @@ type FormData = yup.InferType<typeof schema>;
 
 const Page = () => {
   const [message, setMessage] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [type, setType] = useState<string>("success");
 
   const {
     control,
@@ -36,15 +39,24 @@ const Page = () => {
 
   const onSubmit: SubmitHandler<FormData> = async (values) => {
     try {
+      setLoading(true);
       const { data } = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URI}/reset-password`,
         values,
       );
-      console.log(data);
 
+      setLoading(false);
+      if (type !== "success") {
+        setType("success");
+      }
       setMessage(data.message);
     } catch (e: any) {
-      console.error(e.response.data.error.message);
+      const message = e.response.data.error.message;
+      setLoading(false);
+      if (message.includes("already")) {
+        setType("warning");
+        return setMessage(message);
+      }
       setError(
         "email",
         { type: "custom", message: e.response.data.error.message },
@@ -69,6 +81,7 @@ const Page = () => {
               message={message}
               isOpen={!!message}
               handleClose={handleClose}
+              type={type}
             />
             <Controller
               name={"email"}
@@ -86,13 +99,14 @@ const Page = () => {
                 );
               }}
             />
-            <Button
+            <LoadingButton
+              loading={loading}
               type={"submit"}
               variant={"contained"}
               sx={{ textTransform: "capitalize" }}
             >
               Confirm reset
-            </Button>
+            </LoadingButton>
           </Box>
         </form>
       </FormWrapper>
